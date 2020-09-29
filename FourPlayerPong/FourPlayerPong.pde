@@ -91,8 +91,8 @@ void setup() {
   
   titlesong.loop();
   
-  initGame();
   demoMode();
+  initGame();
 }
 
 void demoMode() {
@@ -117,6 +117,45 @@ void initGame() {
     keysPressed[j] = 0;
     XRepKeys[j] = false;
    }
+
+  if (joy1 != null) {
+    if (joy1.Highscore != null) {
+      joy1.Highscore.Score = 0;
+      joy1.Highscore = null;
+    }
+    joy1.Score = 0;
+    joy1 = null;
+  }
+  if (joy2 != null) {
+    if (joy2.Highscore != null) {
+      joy2.Highscore.Score = 0;
+      joy2.Highscore = null;
+    }
+    joy2.Score = 0;
+    joy2 = null;
+  }
+  if (joy3 != null) {
+    if (joy3.Highscore != null) {
+      joy3.Highscore.Score = 0;
+      joy3.Highscore = null;
+    }
+    joy3.Score = 0;
+    joy3 = null;
+  }
+  if (joy4 != null) {
+    if (joy4.Highscore != null) {
+      joy4.Highscore.Score = 0;
+      joy4.Highscore = null;
+    }
+    joy4.Score = 0;
+    joy4 = null;
+  }
+
+  for (int i=0;i<NumBalls;i++) {
+     if (ball[i] != null) {
+       ball[i] = null;
+     }
+  }
 
   joy1 = new Joystick(30,30,1,0,color(255,255,255));
   joy2 = new Joystick(30,30,0,1,color(255,0,0));
@@ -213,7 +252,7 @@ void draw() {
         joy2.Highscore.Update();
         if (frameCounter>=23000) {
           frameCounter=0;
-          initGame();
+          resetGame = true;
           for (int j=0;j<NumKeys;j++) {
             keysPressed[j] = 0;
            }
@@ -221,6 +260,7 @@ void draw() {
           for (int i=0;i<4;i++) {
             HumanPlayer[i] = false;
            }
+          TestToResetGame();
          }
        }
      else
@@ -232,6 +272,9 @@ void draw() {
          TextOrientation %= 360;
          fill(255);
          textSize(TextSize++);
+         if (TextSize > 255) {
+           TextSize = 255;
+         }
          text("Game Over!",0,0);
          popMatrix();
        }
@@ -245,6 +288,16 @@ void draw() {
     }
     else
       frameCounter=0;
+  }
+}
+
+boolean resetGame = false;
+
+void TestToResetGame() {
+  if (resetGame == true) {
+    initGame();
+    demoMode();
+    resetGame = false;
   }
 }
 
@@ -436,10 +489,10 @@ class Joystick {
 //    Joys[3] = joy4;
 
     if (HumanPlayer[((KastVersie - 1)&3)]) {
-      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(0).pressed())) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(10).pressed())) {
         joy1.xDir = -1;
       }
-      else if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(2).pressed())) {
+      else if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(12).pressed())) {
         joy1.xDir = 1;
       }
       else {
@@ -452,10 +505,10 @@ class Joystick {
     }
 
     if (HumanPlayer[((KastVersie - 0)&3)]) {
-      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(5).pressed())) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(15).pressed())) {
         joy2.yDir = -1;
       }
-      else if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(7).pressed())) {
+      else if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(17).pressed())) {
         joy2.yDir = 1;
       }
       else {
@@ -468,10 +521,10 @@ class Joystick {
     }
     
     if (HumanPlayer[((KastVersie - 3)&3)]) {
-      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(10).pressed())) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(0).pressed())) {
         joy3.xDir = 1;
       }
-      else if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(12).pressed())) {
+      else if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(2).pressed())) {
         joy3.xDir = -1;
       }
       else {
@@ -484,10 +537,10 @@ class Joystick {
     }
 
     if (HumanPlayer[((KastVersie - 2)&3)]) {
-      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(15).pressed())) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(5).pressed())) {
         joy4.yDir = 1;
       }
-      else if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(17).pressed())) {
+      else if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(7).pressed())) {
         joy4.yDir = -1;
       }
       else {
@@ -890,9 +943,9 @@ class Highscore {
          for (int j=0;j<4;j++) {
            NumCollectedFireButtons = ((CollectedFireButtons[j])?(NumCollectedFireButtons + 1):NumCollectedFireButtons);
           }
-         if (NumCollectedFireButtons >= NumHumanPlayers) {
-           initGame();
+         if (NumCollectedFireButtons == NumHumanPlayers) {
            demoMode();
+           resetGame = true;
           }
          RepKey[1] = true;
        }
@@ -934,6 +987,5 @@ class Highscore {
      NaamLijst[CursorY & 7] = String.valueOf(Chars);
    }
  }
-
 
 }
