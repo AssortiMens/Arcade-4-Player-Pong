@@ -272,8 +272,8 @@ void draw() {
          TextOrientation %= 360;
          fill(255);
          textSize(TextSize++);
-         if (TextSize > 255) {
-           TextSize = 255;
+         if (TextSize > 128) {
+           TextSize = 128;
          }
          text("Game Over!",0,0);
          popMatrix();
@@ -723,6 +723,12 @@ boolean Once[] = {false,false,false,false};
 boolean CollectedFireButtons[] = {false,false,false,false};
 int NumCollectedFireButtons = 0;
 
+int LinksToetsen[] = {0,5,10,15};
+int VuurKnoppen[] = {1,6,11,16};
+int RechtsToetsen[] = {2,7,12,17};
+int PlusToetsen[] = {3,8,13,18};
+int MinToetsen[] = {4,9,14,19};
+
 class Highscore {
   int Score = 0;
   int playerX = 0;
@@ -826,7 +832,7 @@ class Highscore {
    char[] chars = Naam[playerX].toCharArray();
    CursorX %= 10;
    Cursor = chars[CursorX];
-   if (stick.getButton((playerX * NumKeysPerPlayer) + 3).pressed())
+   if (stick.getButton(PlusToetsen[playerX]).pressed())
      {
        if (!(RepKey[3])) {
          for (int i=0;i<78;i++) {
@@ -852,9 +858,8 @@ class Highscore {
    else
      {
        RepKey[3] = false;
-     }
 
-   if (stick.getButton((playerX * NumKeysPerPlayer) + 4).pressed())
+   if (stick.getButton(MinToetsen[playerX]).pressed())
      {
        if (!(RepKey[4])) {
          for (int i=0;i<78;i++) {
@@ -880,12 +885,12 @@ class Highscore {
    else
      {
        RepKey[4] = false;
-     }
 
-   if (stick.getButton((playerX * NumKeysPerPlayer) + 0).pressed())
+   if (stick.getButton(LinksToetsen[playerX]).pressed())
      {
        if (!(RepKey[0])) {
          CursorX--;
+
          if (CursorX < 0)
            CursorX = 0;
 
@@ -904,9 +909,8 @@ class Highscore {
    else
      {
        RepKey[0] = false;
-     }
 
-   if (stick.getButton((playerX * NumKeysPerPlayer) + 2).pressed())
+   if (stick.getButton(RechtsToetsen[playerX]).pressed())
      {
        if (!(RepKey[2])) {
          CursorX++;
@@ -928,9 +932,8 @@ class Highscore {
    else
      {
        RepKey[2] = false;
-     }
 
-   if (stick.getButton((playerX * NumKeysPerPlayer) + 1).pressed())
+   if (stick.getButton(VuurKnoppen[playerX]).pressed())
      {
        if (!(RepKey[1])) {
          for (int i=0;i<NumKeys;i++) {
@@ -954,6 +957,7 @@ class Highscore {
      {
        RepKey[1] = false;
      }
+    }}}}
 
    CursorX %= 10;
    playerX %= 4;
