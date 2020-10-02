@@ -9,10 +9,10 @@
 /*                               */
 /*   AssortiMens (C) 2018-2020   */
 /*********************************/
-/*          Kast-Versie          */
+/*        NON Kast-Versie        */
 /*********************************/
 
-int KastVersie = 3; /* 3 = true, 0 = false */
+int KastVersie = 0; /* 3 = true, 0 = false */
 
 import org.gamecontrolplus.*;
 
@@ -64,15 +64,15 @@ int Kleur = -1;
 boolean Opkomst = true;
 
 void setup() {
-  size(1024,768);
-//  fullScreen();
+//  size(1024,768);
+  fullScreen();
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice(2);
+    stick = control.getDevice((KastVersie==3)?("Arduino Leonardo"):("AT Translated Set 2 keyboard"));
   }
   catch (Exception e) {
-    println("No Wingman/Joystick configured!");
+    println("No Arduino found or no Toetsenbord/Keyboard configured!");
     System.exit(0);
   }
   try {
@@ -488,11 +488,11 @@ class Joystick {
 //    Joys[2] = joy3;
 //    Joys[3] = joy4;
 
-    if (HumanPlayer[((KastVersie - 1)&3)]) {
-      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(10).pressed())) {
+    if (HumanPlayer[2]) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[2]):int('a')).pressed())) {
         joy1.xDir = -1;
       }
-      else if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(12).pressed())) {
+      else if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[2]):int('d')).pressed())) {
         joy1.xDir = 1;
       }
       else {
@@ -504,11 +504,11 @@ class Joystick {
       joy1.xDir = 0;
     }
 
-    if (HumanPlayer[((KastVersie - 0)&3)]) {
-      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(15).pressed())) {
+    if (HumanPlayer[3]) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[3]):int('z')).pressed())) {
         joy2.yDir = -1;
       }
-      else if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(17).pressed())) {
+      else if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[3]):int('c')).pressed())) {
         joy2.yDir = 1;
       }
       else {
@@ -520,12 +520,12 @@ class Joystick {
       joy2.yDir = 0;
     }
     
-    if (HumanPlayer[((KastVersie - 3)&3)]) {
-      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(0).pressed())) {
-        joy3.xDir = 1;
-      }
-      else if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(2).pressed())) {
+    if (HumanPlayer[0]) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[0]):int('1')).pressed())) {
         joy3.xDir = -1;
+      }
+      else if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[0]):int('3')).pressed())) {
+        joy3.xDir = 1;
       }
       else {
         joy3.xDir = 0;
@@ -536,12 +536,12 @@ class Joystick {
       joy3.xDir = 0;
     }
 
-    if (HumanPlayer[((KastVersie - 2)&3)]) {
-      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(5).pressed())) {
-        joy4.yDir = 1;
-      }
-      else if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(7).pressed())) {
+    if (HumanPlayer[1]) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[1]):int('q')).pressed())) {
         joy4.yDir = -1;
+      }
+      else if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[1]):int('e')).pressed())) {
+        joy4.yDir = 1;
       }
       else {
         joy4.yDir = 0;
@@ -821,7 +821,6 @@ class Highscore {
   Joys[1] = joy4;
   Joys[2] = joy1;
   Joys[3] = joy2;
-
   if ((Joys[playerX].Highscore == this)&&(HumanPlayer[playerX] == true)) {
    for (int j=0;j<NumKeysPerPlayer;j++)
     {
@@ -832,7 +831,7 @@ class Highscore {
    char[] chars = Naam[playerX].toCharArray();
    CursorX %= 10;
    Cursor = chars[CursorX];
-   if (stick.getButton(PlusToetsen[playerX]).pressed())
+   if (stick.getButton((KastVersie==3)?(PlusToetsen[playerX]):int('r')).pressed())
      {
        if (!(RepKey[3])) {
          for (int i=0;i<78;i++) {
@@ -859,7 +858,7 @@ class Highscore {
      {
        RepKey[3] = false;
 
-   if (stick.getButton(MinToetsen[playerX]).pressed())
+   if (stick.getButton((KastVersie==3)?(MinToetsen[playerX]):int('t')).pressed())
      {
        if (!(RepKey[4])) {
          for (int i=0;i<78;i++) {
@@ -886,7 +885,7 @@ class Highscore {
      {
        RepKey[4] = false;
 
-   if (stick.getButton(LinksToetsen[playerX]).pressed())
+   if (stick.getButton((KastVersie==3)?(LinksToetsen[playerX]):int('q')).pressed())
      {
        if (!(RepKey[0])) {
          CursorX--;
@@ -910,7 +909,7 @@ class Highscore {
      {
        RepKey[0] = false;
 
-   if (stick.getButton(RechtsToetsen[playerX]).pressed())
+   if (stick.getButton((KastVersie==3)?(RechtsToetsen[playerX]):int('e')).pressed())
      {
        if (!(RepKey[2])) {
          CursorX++;
@@ -933,7 +932,7 @@ class Highscore {
      {
        RepKey[2] = false;
 
-   if (stick.getButton(VuurKnoppen[playerX]).pressed())
+   if (stick.getButton((KastVersie==3)?(VuurKnoppen[playerX]):int('w')).pressed())
      {
        if (!(RepKey[1])) {
          for (int i=0;i<NumKeys;i++) {
