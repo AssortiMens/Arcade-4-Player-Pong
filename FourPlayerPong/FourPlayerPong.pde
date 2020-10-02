@@ -9,10 +9,10 @@
 /*                               */
 /*   AssortiMens (C) 2018-2020   */
 /*********************************/
-/*        NON Kast-Versie        */
+/*          Kast-Versie          */
 /*********************************/
 
-int KastVersie = 0; /* 3 = true, 0 = false */
+int KastVersie = 3; /* 3 = true, 0 = false */
 
 import org.gamecontrolplus.*;
 
