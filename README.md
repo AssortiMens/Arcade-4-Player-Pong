@@ -16,9 +16,9 @@ sudo processing-java --sketch="path where your source or pde-file is stored" --r
 
 skip the sudo command if you are executing from within MS-Windows.
 
-If it fails, it will show you a device list. Check the device number of your keyboard, it shows on the left.
-If you have a gamecontroller which should have at least 20 keys, use that devicenumber, otherwise use the keyboard.
-Fill in the device number in the source code, which is very important! Next, try to execute or run it again.
+If it fails, it will show you a device list. Check the device number or device name of your keyboard, it shows on the left.
+If you have a gamecontroller, which should have at least 20 keys, use that devicenumber or device name, otherwise use the keyboard.
+Fill in the device number or device name in the source code, which is very important! Next, try to execute or run it again.
 It should work this time...
 
 Always try to maintain the following directory-structure:
