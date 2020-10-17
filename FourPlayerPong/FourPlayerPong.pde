@@ -5,7 +5,7 @@
 /*                               */
 /*         William  Senn         */
 /*          Bas  Timmer          */
-/*         Arjan  Boeink         */
+/*        Arjan  Boeijink        */
 /*                               */
 /*   AssortiMens (C) 2018-2020   */
 /*********************************/
@@ -109,9 +109,11 @@ void initGame() {
   NumHumanPlayers = 0;
 
   for (int k=0;k<4;k++) {
+    HumanPlayer[k] = false;
     CollectedFireButtons[k] = false;
    }
 
+  buttonPressed = false;
   for (int j=0;j<NumKeys;j++)
    {
     keysPressed[j] = 0;
@@ -157,14 +159,14 @@ void initGame() {
      }
   }
 
-  joy1 = new Joystick(30,30,1,0,color(255,255,255));
+  joy1 = new Joystick(30,30,1,0,color(255,0,255));
   joy2 = new Joystick(30,30,0,1,color(255,0,0));
   joy3 = new Joystick(width-30,height-30,-1,0,color(0,255,0));
   joy4 = new Joystick(width-30,height-30,0,-1,color(0,0,255));
   
   for (int i=0;i<NumBalls;i++)
   {
-    ball[i] = new Ball(width/2,height/2,int(random(ballSpeed))+1,int(random(ballSpeed))+1,Dirs[int(random(2))],Dirs[int(random(2))],color(128,128,128));
+    ball[i] = new Ball(width/2,height/2,int(random(ballSpeed))+1,int(random(ballSpeed))+1,Dirs[int(random(2))],Dirs[int(random(2))],color(255,255,255));
   }
 }
 
@@ -253,10 +255,15 @@ void draw() {
         if (frameCounter>=23000) {
           frameCounter=0;
           resetGame = true;
+          
+          /* flush all keys! */
+          ButtonPressed();
           for (int j=0;j<NumKeys;j++) {
             keysPressed[j] = 0;
            }
           buttonPressed = false;
+          keyPressed = false;
+
           for (int i=0;i<4;i++) {
             HumanPlayer[i] = false;
            }
@@ -272,11 +279,20 @@ void draw() {
          TextOrientation %= 360;
          fill(255);
          textSize(TextSize++);
-         if (TextSize > 128) {
-           TextSize = 128;
+         if (TextSize > 64) {
+           TextSize = 64;
          }
          text("Game Over!",0,0);
+         text("Release all keys, please!",0,100);
          popMatrix();
+
+         /* flush all keys */
+         ButtonPressed();
+         buttonPressed = false;
+         keyPressed = false;
+         for (int i=0;i<NumKeys;i++) {
+           keysPressed[i] = 0;
+         }
        }
     }
   }
@@ -295,22 +311,224 @@ boolean resetGame = false;
 
 void TestToResetGame() {
   if (resetGame == true) {
+    ButtonPressed();
+    while ((buttonPressed == true)) {
+      ButtonPressed();
+    }
     initGame();
     demoMode();
     resetGame = false;
   }
 }
 
-void ButtonPressed() {
-  buttonPressed=false;
-  for (int kn=0;kn<NumKeys;kn++) {
-    if (stick.getButton(kn).pressed()) {
-      buttonPressed=true;
-      keysPressed[kn]=kn+1;
-    }
-    else
-      keysPressed[kn]=0;
+void keyPressed() {
+// Joystick Joys[] = {joy3,joy4,joy1,joy2};
+
+// Joys[0] = joy3;
+// Joys[1] = joy4;
+// Joys[2] = joy1;
+// Joys[3] = joy2;
+
+ buttonPressed=false;
+ keyPressed = false;
+ for (int i=0;i<NumKeys;i++) {
+      keysPressed[i]=0;
+ }
+// if (HumanPlayer[0]) {
+  if (key == (LinksToetsen[0] + '1' - LinksToetsen[0])) {
+   buttonPressed=true;
+   keysPressed[0]=LinksToetsen[0]+1;
+//   Joys[0].xDir = -1;
   }
+  if (key == (VuurKnoppen[0] + '2' - VuurKnoppen[0])) {
+   buttonPressed=true;
+   keysPressed[1]=VuurKnoppen[0]+1;
+//   Joys[0].xDir = 0;
+  }
+  if (key == (RechtsToetsen[0] + '3' - RechtsToetsen[0])) {
+   buttonPressed=true;
+   keysPressed[2]=RechtsToetsen[0]+1;
+//   Joys[0].xDir = 1;
+  }
+  if (key == (PlusToetsen[0] + '4' - PlusToetsen[0])) {
+   buttonPressed=true;
+   keysPressed[3]=PlusToetsen[0]+1;
+/*
+   if (Joys[0]!=null) {
+    if (Joys[0].Highscore!=null) {
+     Joys[0].Highscore.KarCount++;
+     Joys[0].Highscore.KarCount %= 78;
+    }
+   }
+*/
+  }
+  if (key == (MinToetsen[0] + '5' - MinToetsen[0])) {
+   buttonPressed=true;
+   keysPressed[4]=MinToetsen[0]+1;
+/*
+   if (Joys[0]!=null) {
+    if (Joys[0].Highscore!=null) {
+     Joys[0].Highscore.KarCount--;
+     Joys[0].Highscore.KarCount %= 78;
+    }
+   }
+*/
+  }
+// }
+
+// if (HumanPlayer[1]) {  
+  if (key == (LinksToetsen[1] + 'q' - LinksToetsen[1])) {
+   buttonPressed=true;
+   keysPressed[(1*NumKeysPerPlayer)+0]=LinksToetsen[1]+1;
+//   Joys[1].yDir = 1;
+  }
+  if (key == (VuurKnoppen[1] + 'w' - VuurKnoppen[1])) {
+   buttonPressed=true;
+   keysPressed[(1*NumKeysPerPlayer)+1]=VuurKnoppen[1]+1;
+//   Joys[1].yDir = 0;
+  }
+  if (key == (RechtsToetsen[1] + 'e' - RechtsToetsen[1])) {
+   buttonPressed=true;
+   keysPressed[(1*NumKeysPerPlayer)+2]=RechtsToetsen[1]+1;
+//   Joys[1].yDir = -1;
+  }
+  if (key == (PlusToetsen[1] + 'r' - PlusToetsen[1])) {
+   buttonPressed=true;
+   keysPressed[(1*NumKeysPerPlayer)+3]=PlusToetsen[1]+1;
+/*
+   if (Joys[1]!=null) {
+    if (Joys[1].Highscore!=null) {
+     Joys[1].Highscore.KarCount++;
+     Joys[1].Highscore.KarCount %= 78;
+    }
+   }
+*/
+  }
+  if (key == (MinToetsen[1] + 't' - MinToetsen[1])) {
+   buttonPressed=true;
+   keysPressed[(1*NumKeysPerPlayer)+4]=MinToetsen[1]+1;
+/*
+   if (Joys[1]!=null) {
+    if (Joys[1].Highscore!=null) {
+     Joys[1].Highscore.KarCount--;
+     Joys[1].Highscore.KarCount %= 78;
+    }
+   }
+*/
+  }
+// }
+
+// if (HumanPlayer[2]) {  
+  if (key == (LinksToetsen[2] + 'a' - LinksToetsen[2])) {
+   buttonPressed=true;
+   keysPressed[(2*NumKeysPerPlayer)+0]=LinksToetsen[2]+1;
+//   Joys[2].xDir = 1;
+  }
+  if (key == (VuurKnoppen[2] + 's' - VuurKnoppen[2])) {
+   buttonPressed=true;
+   keysPressed[(2*NumKeysPerPlayer)+1]=VuurKnoppen[2]+1;
+//   Joys[2].xDir = 0;
+  }
+  if (key == (RechtsToetsen[2] + 'd' - RechtsToetsen[2])) {
+   buttonPressed=true;
+   keysPressed[(2*NumKeysPerPlayer)+2]=RechtsToetsen[2]+1;
+//   Joys[2].xDir = -1;
+  }
+  if (key == (PlusToetsen[2] + 'f' - PlusToetsen[2])) {
+   buttonPressed=true;
+   keysPressed[(2*NumKeysPerPlayer)+3]=PlusToetsen[2]+1;
+/*
+   if (Joys[2]!=null) {
+    if (Joys[2].Highscore!=null) {
+     Joys[2].Highscore.KarCount++; 
+     Joys[2].Highscore.KarCount %= 78;
+    }
+   }
+*/
+  }
+  if (key == (MinToetsen[2] + 'g' - MinToetsen[2])) {
+   buttonPressed=true;
+   keysPressed[(2*NumKeysPerPlayer)+4]=MinToetsen[2]+1;
+/*
+   if (Joys[2]!=null) {
+    if (Joys[2].Highscore!=null) {
+     Joys[2].Highscore.KarCount--;
+     Joys[2].Highscore.KarCount %= 78;
+    }
+   }
+*/
+  }
+// }
+ 
+// if (HumanPlayer[3]) { 
+  if (key == (LinksToetsen[3] + 'z' - LinksToetsen[3])) {
+   buttonPressed=true;
+   keysPressed[(3*NumKeysPerPlayer)+0]=LinksToetsen[3]+1;
+/*
+   if (Joys[3]!=null) {
+    Joys[3].yDir = -1;
+    if (Joys[3].Highscore!=null) {
+     Joys[3].Highscore.CursorX--;
+     Joys[3].Highscore.CursorX %= 10;
+    }
+   }
+*/
+  }
+  if (key == (VuurKnoppen[3] + 'x' - VuurKnoppen[3])) {
+   buttonPressed=true;
+   keysPressed[(3*NumKeysPerPlayer)+1]=VuurKnoppen[3]+1;
+//   Joys[3].yDir = 0;
+  }
+  if (key == (RechtsToetsen[3] + 'c' - RechtsToetsen[3])) {
+   buttonPressed=true;
+   keysPressed[(3*NumKeysPerPlayer)+2]=RechtsToetsen[3]+1;
+/*
+   if (Joys[3]!=null) {
+    Joys[3].yDir = 1;
+    if (Joys[3].Highscore!=null) {
+     Joys[3].Highscore.CursorX++;
+     Joys[3].Highscore.CursorX %= 10;
+    }
+   }
+*/
+  }
+  if (key == (PlusToetsen[3] + 'v' - PlusToetsen[3])) {
+   buttonPressed=true;
+   keysPressed[(3*NumKeysPerPlayer)+3]=PlusToetsen[3]+1;
+/*
+   if (Joys[3].Highscore!=null) {
+    Joys[3].Highscore.KarCount++;
+    Joys[3].Highscore.KarCount %= 78;
+   }
+*/
+  }
+  if (key == (MinToetsen[3] + 'b' - MinToetsen[3])) {
+   buttonPressed=true;
+   keysPressed[(3*NumKeysPerPlayer)+4]=MinToetsen[3]+1;
+/*
+   if (Joys[3].Highscore!=null) {
+    Joys[3].Highscore.KarCount--;
+    Joys[3].Highscore.KarCount %= 78;
+   }
+*/
+  }
+// }
+}
+
+void ButtonPressed() {
+  if (KastVersie == 3) {
+    buttonPressed=false;
+    for (int kn=0;kn<NumKeys;kn++) {
+      if (stick.getButton(kn).pressed()) {
+        buttonPressed=true;
+        keysPressed[kn]=kn+1;
+      }
+      else
+        keysPressed[kn]=0;
+    }
+  }
+ else
+  keyPressed();
 }
 
 void perFrameDemo1() {
@@ -489,64 +707,72 @@ class Joystick {
 //    Joys[3] = joy4;
 
     if (HumanPlayer[2]) {
-      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[2]):int('a')).pressed())) {
-        joy1.xDir = -1;
-      }
-      else if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[2]):int('d')).pressed())) {
+      joy1.xDir = 0;
+      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[2]).pressed()):((key == 'a')))) { // &&(!keyPressed)))) {
         joy1.xDir = 1;
       }
-      else {
-        joy1.xDir = 0;
+//     else {
+      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[2]).pressed()):((key == 'd')))) { // &&(!keyPressed)))) {
+        joy1.xDir = -1;
       }
-    }
+//      else {
+//        joy1.xDir = 0;
+//      }
+    } // }
     else {
       joy1.x = ball[0].x;
       joy1.xDir = 0;
     }
 
     if (HumanPlayer[3]) {
-      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[3]):int('z')).pressed())) {
+      joy2.yDir = 0;
+      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[3]).pressed()):((key == 'z')))) { // &&(!keyPressed)))) {
         joy2.yDir = -1;
       }
-      else if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[3]):int('c')).pressed())) {
+//      else {
+      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[3]).pressed()):((key == 'c')))) { // &&(!keyPressed)))) {
         joy2.yDir = 1;
       }
-      else {
-        joy2.yDir = 0;
-      }
-    }
+//      else {
+//        joy2.yDir = 0;
+//      }
+    } // }
     else {
       joy2.y = ball[0].y;
       joy2.yDir = 0;
     }
     
     if (HumanPlayer[0]) {
-      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[0]):int('1')).pressed())) {
+      joy3.xDir = 0;
+      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[0]).pressed()):((key == '1')))) { // &&(!keyPressed)))) {
         joy3.xDir = -1;
       }
-      else if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[0]):int('3')).pressed())) {
+//      else {
+      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[0]).pressed()):((key == '3')))) { // &&(!keyPressed)))) {
         joy3.xDir = 1;
       }
-      else {
-        joy3.xDir = 0;
-      }
-    }
+//      else {
+//        joy3.xDir = 0;
+//      }
+    } // }
     else {
       joy3.x = ball[0].x;
       joy3.xDir = 0;
     }
 
     if (HumanPlayer[1]) {
-      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton((KastVersie==3)?(LinksToetsen[1]):int('q')).pressed())) {
-        joy4.yDir = -1;
-      }
-      else if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton((KastVersie==3)?(RechtsToetsen[1]):int('e')).pressed())) {
+      joy4.yDir = 0;
+      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[1]).pressed()):((key == 'q')))) { // &&(!keyPressed)))) {
         joy4.yDir = 1;
       }
-      else {
-        joy4.yDir = 0;
+//      else {
+      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[1]).pressed()):((key == 'e')))) { // &&(!keyPressed)))) {
+        joy4.yDir = -1;
       }
-    }
+//      else {
+//        joy4.yDir = 0;
+//      }
+    } // }
     else {
       joy4.y = ball[0].y;
       joy4.yDir = 0;
@@ -831,7 +1057,7 @@ class Highscore {
    char[] chars = Naam[playerX].toCharArray();
    CursorX %= 10;
    Cursor = chars[CursorX];
-   if (stick.getButton((KastVersie==3)?(PlusToetsen[playerX]):int('r')).pressed())
+   if ((KastVersie==3)?(stick.getButton(PlusToetsen[playerX]).pressed()):(key == 'r'))
      {
        if (!(RepKey[3])) {
          for (int i=0;i<78;i++) {
@@ -858,7 +1084,7 @@ class Highscore {
      {
        RepKey[3] = false;
 
-   if (stick.getButton((KastVersie==3)?(MinToetsen[playerX]):int('t')).pressed())
+   if ((KastVersie==3)?(stick.getButton(MinToetsen[playerX]).pressed()):(key == 't'))
      {
        if (!(RepKey[4])) {
          for (int i=0;i<78;i++) {
@@ -885,7 +1111,7 @@ class Highscore {
      {
        RepKey[4] = false;
 
-   if (stick.getButton((KastVersie==3)?(LinksToetsen[playerX]):int('q')).pressed())
+   if ((KastVersie==3)?(stick.getButton(LinksToetsen[playerX]).pressed()):(key == 'q'))
      {
        if (!(RepKey[0])) {
          CursorX--;
@@ -909,7 +1135,7 @@ class Highscore {
      {
        RepKey[0] = false;
 
-   if (stick.getButton((KastVersie==3)?(RechtsToetsen[playerX]):int('e')).pressed())
+   if ((KastVersie==3)?(stick.getButton(RechtsToetsen[playerX]).pressed()):(key == 'e'))
      {
        if (!(RepKey[2])) {
          CursorX++;
@@ -932,7 +1158,7 @@ class Highscore {
      {
        RepKey[2] = false;
 
-   if (stick.getButton((KastVersie==3)?(VuurKnoppen[playerX]):int('w')).pressed())
+   if ((KastVersie==3)?(stick.getButton(VuurKnoppen[playerX]).pressed()):(key == 'w'))
      {
        if (!(RepKey[1])) {
          for (int i=0;i<NumKeys;i++) {
