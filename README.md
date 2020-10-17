@@ -1,7 +1,5 @@
 # Arcade-4-Player-Pong
 
-![foto](simplescreenshot.jpg)
-
 This is a first attempt to whatever software I am publishing.
 
 It is supposed to be an Arcade version of a 4-player pong game, pong look alike game.
