@@ -1,5 +1,7 @@
 # Arcade-4-Player-Pong
 
+![foto](simplescreenshot.jpg)
+
 This is a first attempt to whatever software I am publishing.
 
 It is supposed to be an Arcade version of a 4-player pong game, pong look alike game.
@@ -20,6 +22,8 @@ If it fails, it will show you a device list. Check the device number or device n
 If you have a gamecontroller, which should have at least 20 keys, use that devicenumber or device name, otherwise use the keyboard.
 Fill in the device number or device name in the source code, which is very important! Next, try to execute or run it again.
 It should work this time...
+
+It will be easiest if you change the devicename "Arduino Leonardo" into your particular devicename and leave KastVersie with the value 3.
 
 Always try to maintain the following directory-structure:
 
