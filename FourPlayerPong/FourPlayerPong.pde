@@ -170,7 +170,17 @@ void initGame() {
   }
 }
 
+int millis1 = 0;
+int millis2 = 0;
+int verschil = 0;
+
 void draw() {
+/* frame tijd achterhalen */
+  millis1 = millis2;
+  millis2 = millis();
+  verschil = millis2 - millis1;
+//  println(verschil);
+
   if (frameCounter<1000) {
     perFrameDemo1();
   }
@@ -262,7 +272,7 @@ void draw() {
             keysPressed[j] = 0;
            }
           buttonPressed = false;
-          keyPressed = false;
+//          keyPressed = false;
 
           for (int i=0;i<4;i++) {
             HumanPlayer[i] = false;
@@ -289,7 +299,7 @@ void draw() {
          /* flush all keys */
          ButtonPressed();
          buttonPressed = false;
-         keyPressed = false;
+//         keyPressed = false;
          for (int i=0;i<NumKeys;i++) {
            keysPressed[i] = 0;
          }
@@ -330,7 +340,7 @@ void keyPressed() {
 // Joys[3] = joy2;
 
  buttonPressed=false;
- keyPressed = false;
+// keyPressed = false;
  for (int i=0;i<NumKeys;i++) {
       keysPressed[i]=0;
  }
@@ -524,11 +534,15 @@ void ButtonPressed() {
         keysPressed[kn]=kn+1;
       }
       else
+       {
         keysPressed[kn]=0;
+       }
     }
   }
  else
-  keyPressed();
+  {
+   keyPressed();
+  }
 }
 
 void perFrameDemo1() {
@@ -1041,6 +1055,7 @@ class Highscore {
 
  void Update()
  {
+  int i,j,k;
   Joystick Joys[] = {joy3,joy4,joy1,joy2};
 
   Joys[0] = joy3;
@@ -1048,7 +1063,7 @@ class Highscore {
   Joys[2] = joy1;
   Joys[3] = joy2;
   if ((Joys[playerX].Highscore == this)&&(HumanPlayer[playerX] == true)) {
-   for (int j=0;j<NumKeysPerPlayer;j++)
+   for (j=0;j<NumKeysPerPlayer;j++)
     {
      RepKey[j] = XRepKeys[((playerX * NumKeysPerPlayer) + j)];
     }
@@ -1057,10 +1072,11 @@ class Highscore {
    char[] chars = Naam[playerX].toCharArray();
    CursorX %= 10;
    Cursor = chars[CursorX];
+
    if ((KastVersie==3)?(stick.getButton(PlusToetsen[playerX]).pressed()):(key == 'r'))
      {
        if (!(RepKey[3])) {
-         for (int i=0;i<78;i++) {
+         for (i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
@@ -1083,11 +1099,12 @@ class Highscore {
    else
      {
        RepKey[3] = false;
+     }
 
    if ((KastVersie==3)?(stick.getButton(MinToetsen[playerX]).pressed()):(key == 't'))
      {
        if (!(RepKey[4])) {
-         for (int i=0;i<78;i++) {
+         for (i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
@@ -1110,6 +1127,7 @@ class Highscore {
    else
      {
        RepKey[4] = false;
+     }
 
    if ((KastVersie==3)?(stick.getButton(LinksToetsen[playerX]).pressed()):(key == 'q'))
      {
@@ -1118,10 +1136,13 @@ class Highscore {
 
          if (CursorX < 0)
            CursorX = 0;
+         if (CursorX > 9)
+           CursorX = 9;
+         CursorX %= 10;
 
          Cursor = chars[CursorX];
          
-         for (int i=0;i<78;i++) {
+         for (i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
@@ -1134,17 +1155,22 @@ class Highscore {
    else
      {
        RepKey[0] = false;
+     }
 
    if ((KastVersie==3)?(stick.getButton(RechtsToetsen[playerX]).pressed()):(key == 'e'))
      {
        if (!(RepKey[2])) {
          CursorX++;
+
+         if (CursorX < 0)
+           CursorX = 0;
          if (CursorX > 9)
            CursorX = 9;
+         CursorX %= 10;
 
          Cursor = chars[CursorX];
 
-         for (int i=0;i<78;i++) {
+         for (i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
@@ -1157,18 +1183,19 @@ class Highscore {
    else
      {
        RepKey[2] = false;
+     }
 
    if ((KastVersie==3)?(stick.getButton(VuurKnoppen[playerX]).pressed()):(key == 'w'))
      {
        if (!(RepKey[1])) {
-         for (int i=0;i<NumKeys;i++) {
+         for (i=0;i<NumKeys;i++) {
            keysPressed[i]=0;
           }
          buttonPressed = false;
          CollectedFireButtons[playerX] = true;
          NumCollectedFireButtons = 0;
 
-         for (int j=0;j<4;j++) {
+         for (j=0;j<4;j++) {
            NumCollectedFireButtons = ((CollectedFireButtons[j])?(NumCollectedFireButtons + 1):NumCollectedFireButtons);
           }
          if (NumCollectedFireButtons == NumHumanPlayers) {
@@ -1182,7 +1209,6 @@ class Highscore {
      {
        RepKey[1] = false;
      }
-    }}}}
 
    CursorX %= 10;
    playerX %= 4;
@@ -1191,7 +1217,7 @@ class Highscore {
    chars[CursorX] = Cursor;
    Naam[playerX] = String.valueOf(chars);
 
-   for (int k=0;k<NumKeysPerPlayer;k++)
+   for (k=0;k<NumKeysPerPlayer;k++)
     {
      XRepKeys[((NumKeysPerPlayer * playerX) + k)] = RepKey[k];
     }
