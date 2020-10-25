@@ -232,7 +232,7 @@ void draw() {
           for(int j=0;j<4;j++) {
             text("HumanPlayer[j]=", 100,(200+50*j));
             text(((HumanPlayer[j])?"true":"false"), 260,(200+50*j));
-            NumHumanPlayers = ((HumanPlayer[j])?(NumHumanPlayers+1):NumHumanPlayers);
+            NumHumanPlayers = ((HumanPlayer[j])?(NumHumanPlayers+1):(NumHumanPlayers));
            }
           text("NumHumanPlayers = ", 100,400);
           text(NumHumanPlayers, 260, 400);
@@ -320,15 +320,18 @@ void draw() {
 boolean resetGame = false;
 
 void TestToResetGame() {
-  if (resetGame == true) {
-    ButtonPressed();
-    while ((buttonPressed == true)) {
+  if (resetGame == true)
+   {
+    do
+    {
       ButtonPressed();
     }
+    while (buttonPressed == true);
+
     initGame();
     demoMode();
     resetGame = false;
-  }
+   }
 }
 
 void keyPressed() {
@@ -527,15 +530,15 @@ void keyPressed() {
 
 void ButtonPressed() {
   if (KastVersie == 3) {
-    buttonPressed=false;
-    for (int kn=0;kn<NumKeys;kn++) {
-      if (stick.getButton(kn).pressed()) {
-        buttonPressed=true;
-        keysPressed[kn]=kn+1;
+    buttonPressed = false;
+    for (int z=0;z<NumKeys;z++) {
+      if (stick.getButton(z).pressed()) {
+        buttonPressed = true;
+        keysPressed[z] = (z+1);
       }
       else
        {
-        keysPressed[kn]=0;
+        keysPressed[z] = 0;
        }
     }
   }
@@ -710,6 +713,7 @@ class Joystick {
       }
     Color = tColor;
     Highscore = null;
+    PNaampje = 2;
   }
   
   void Update() {
@@ -847,16 +851,21 @@ class Joystick {
     rect(x,y,w,h);
 
     pushMatrix();
-    translate(x + (30 * yOrient),y + (30 * xOrient));
+    translate(((width/2) - (((width-24)/2) * yOrient)),((height/2) - (((height-24)/2) * xOrient)));
     fill(255,255,255);
     textSize(20);
     textAlign(CENTER,CENTER);
     rotate(radians(((abs(xOrient)) == 0)?(90 * yOrient):((abs(yOrient) == 0)?((90 * xOrient) + 90):0)));
-    text(Score,0,0);
+    text(Naam[(PNaampje&3)],-50,0);
+    text(Score,50,0);
     popMatrix();
+    PNaampje++;
+    PNaampje &= 3;
   }
   
 }
+
+int PNaampje = 2;
 
 class Ball {
   int x,y,xSpeed,ySpeed;
@@ -948,7 +957,7 @@ class Ball {
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
 String NaamLijst[] = {"William___","Bas_______","Arjan_____","Edwin_____","Michel____","Janru_____","Henri_____","Willeke___"};
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
-int PlayerAngle[] = {180,90,0,270};
+int PlayerAngle[] = {181,91,1,271};
 
 String Naam[] = {"_Aapje123_","__Betsy2__","__Carola__","_Dickhead_"};
 char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
