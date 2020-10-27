@@ -256,8 +256,8 @@ void draw() {
       if (frameCounter>=21000) {
         joy3.Highscore.Display();
         joy4.Highscore.Display();
-        joy1.Highscore.Display();
         joy2.Highscore.Display();
+        joy1.Highscore.Display();
         joy3.Highscore.Update();
         joy4.Highscore.Update();
         joy1.Highscore.Update();
@@ -326,7 +326,7 @@ void TestToResetGame() {
     {
       ButtonPressed();
     }
-    while (buttonPressed == true);
+    while(buttonPressed == true);
 
     initGame();
     demoMode();
@@ -957,7 +957,7 @@ class Ball {
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
 String NaamLijst[] = {"William___","Bas_______","Arjan_____","Edwin_____","Michel____","Janru_____","Henri_____","Willeke___"};
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
-int PlayerAngle[] = {181,91,1,271};
+int PlayerAngle[] = {180,90,0,270};
 
 String Naam[] = {"_Aapje123_","__Betsy2__","__Carola__","_Dickhead_"};
 char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
@@ -1231,7 +1231,7 @@ class Highscore {
      XRepKeys[((NumKeysPerPlayer * playerX) + k)] = RepKey[k];
     }
 
-  }
+//  }
 
 // Do strcpy(NaamLijst[CursorY],Naam[playerX]); here!
 //   memcpy(NaamLijst[CursorY],Naam[playerX],10);
@@ -1240,7 +1240,7 @@ class Highscore {
    char[] Chars = Naam[playerX].toCharArray();
    if (CursorY>7) {
      if (!(Once[playerX])) {
-       println(Naam[playerX],", you dropped off the hiscorelist!");
+       println(Naam[playerX],", you dropped off the highscorelist!");
        Once[playerX] = true;
      }
      else {
@@ -1251,5 +1251,5 @@ class Highscore {
      NaamLijst[CursorY & 7] = String.valueOf(Chars);
    }
  }
-
+ }
 }

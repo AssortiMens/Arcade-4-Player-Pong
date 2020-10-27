@@ -6,7 +6,7 @@ It is supposed to be an Arcade version of a 4-player pong game, pong look alike 
 
 Download and install the latest version of Processing first at https://www.processing.org
 
-Startup your Processing IDE and add the minim library and the gamecontrolplus library.
+Startup your Processing IDE and click on tool in the menu and select add tool or toolmanager, then click on libraries and add the minim library and the game control plus library.
 
 Load the pde-file into the editor. Then hit the arrow- or run-button.
 
@@ -21,7 +21,7 @@ If you have a gamecontroller, which should have at least 20 keys, use that devic
 Fill in the device number or device name in the source code, which is very important! Next, try to execute or run it again.
 It should work this time...
 
-It will be easiest if you change the devicename "Arduino Leonardo" into your particular devicename and leave KastVersie with the value 3.
+It will be easiest if you change the devicename "Arduino Leonardo" into your particular devicename.
 
 Always try to maintain the following directory-structure:
 
