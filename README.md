@@ -6,7 +6,7 @@ It is supposed to be an Arcade version of a 4-player pong game, pong look alike 
 
 Download and install the latest version of Processing first at https://www.processing.org
 
-Startup your Processing IDE and click on tool in the menu and select add tool or toolmanager, then click on libraries and add the minim library and the game control plus library.
+Startup your Processing IDE and click on Tools in the menu and select add tool or toolmanager, then click on libraries and add the minim library and the game control plus library.
 
 Load the pde-file into the editor. Then hit the arrow- or run-button.
 
