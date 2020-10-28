@@ -69,7 +69,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice((KastVersie==3)?("Arduino Leonardo"):("AT Translated Set 2 keyboard"));
+    stick = control.getDevice((KastVersie==3)?("AT Translated Set 2 keyboard"):("AT Translated Set 2 keyboard"));
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
@@ -254,29 +254,38 @@ void draw() {
         joy2.Highscore = new Highscore(joy2.Score,3);
        }
       if (frameCounter>=21000) {
+
         joy3.Highscore.Display();
-        joy4.Highscore.Display();
-        joy2.Highscore.Display();
+        if (joy4.y <= joy2.y) {
+          joy4.Highscore.Display();
+          joy2.Highscore.Display();
+         }
+        else {
+          joy2.Highscore.Display();
+          joy4.Highscore.Display();
+         }
         joy1.Highscore.Display();
+
         joy3.Highscore.Update();
         joy4.Highscore.Update();
         joy1.Highscore.Update();
         joy2.Highscore.Update();
+
         if (frameCounter>=23000) {
           frameCounter=0;
           resetGame = true;
           
           /* flush all keys! */
-          ButtonPressed();
-          for (int j=0;j<NumKeys;j++) {
-            keysPressed[j] = 0;
-           }
-          buttonPressed = false;
+//          ButtonPressed();
+//          for (int j=0;j<NumKeys;j++) {
+//            keysPressed[j] = 0;
+//           }
+//          buttonPressed = false;
 //          keyPressed = false;
 
-          for (int i=0;i<4;i++) {
-            HumanPlayer[i] = false;
-           }
+//          for (int i=0;i<4;i++) {
+//            HumanPlayer[i] = false;
+//           }
           TestToResetGame();
          }
        }
@@ -297,12 +306,12 @@ void draw() {
          popMatrix();
 
          /* flush all keys */
-         ButtonPressed();
-         buttonPressed = false;
+//         ButtonPressed();
+//         buttonPressed = false;
 //         keyPressed = false;
-         for (int i=0;i<NumKeys;i++) {
-           keysPressed[i] = 0;
-         }
+//         for (int i=0;i<NumKeys;i++) {
+//           keysPressed[i] = 0;
+//         }
        }
     }
   }
@@ -1201,14 +1210,14 @@ class Highscore {
            keysPressed[i]=0;
           }
          buttonPressed = false;
-         CollectedFireButtons[playerX] = true;
+         CollectedFireButtons[playerX] = HumanPlayer[playerX];  // true;
          NumCollectedFireButtons = 0;
 
          for (j=0;j<4;j++) {
-           NumCollectedFireButtons = ((CollectedFireButtons[j])?(NumCollectedFireButtons + 1):NumCollectedFireButtons);
+           NumCollectedFireButtons = ((CollectedFireButtons[j])?(NumCollectedFireButtons + 1):(NumCollectedFireButtons));
           }
          if (NumCollectedFireButtons == NumHumanPlayers) {
-           demoMode();
+//           demoMode();
            resetGame = true;
           }
          RepKey[1] = true;
@@ -1231,8 +1240,6 @@ class Highscore {
      XRepKeys[((NumKeysPerPlayer * playerX) + k)] = RepKey[k];
     }
 
-//  }
-
 // Do strcpy(NaamLijst[CursorY],Naam[playerX]); here!
 //   memcpy(NaamLijst[CursorY],Naam[playerX],10);
 // This is your double buffering!
@@ -1250,6 +1257,22 @@ class Highscore {
    else {
      NaamLijst[CursorY & 7] = String.valueOf(Chars);
    }
- }
+  }
+  else
+  {
+   char[] Chars = Naam[playerX].toCharArray();
+   if (CursorY>7) {
+     if (!(Once[playerX])) {
+       println(Naam[playerX],", you dropped off the highscorelist!");
+       Once[playerX] = true;
+     }
+     else {
+       Once[playerX] = false;
+     }
+   }
+   else {
+     NaamLijst[CursorY & 7] = String.valueOf(Chars);
+   }
+  }
  }
 }
