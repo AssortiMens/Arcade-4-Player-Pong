@@ -255,16 +255,16 @@ void draw() {
        }
       if (frameCounter>=21000) {
 
-        joy1.Highscore.Display();
+        joy3.Highscore.Display();
 //        if (joy4.y <= joy2.y) {
-          joy2.Highscore.Display();
           joy4.Highscore.Display();
+          joy1.Highscore.Display();
 //         }
 //        else {
 //          joy2.Highscore.Display();
 //          joy4.Highscore.Display();
 //         }
-        joy3.Highscore.Display();
+        joy2.Highscore.Display();
 
         joy3.Highscore.Update();
         joy4.Highscore.Update();
@@ -1067,7 +1067,7 @@ class Highscore {
     rotate(radians(PlayerAngle[playerX]));
 
 //    fill(255,255,255);
-    fill((CursorY==i)?(Joys[playerX].Color):color(255,255,255));
+    fill(((Joys[playerX].Highscore.CursorY)==i)?(Joys[playerX].Color):color(255,255,255));
 
     textSize(20);
     textAlign(CENTER,CENTER);
