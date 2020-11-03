@@ -17,8 +17,8 @@ sudo processing-java --sketch="path where your source or pde-file is stored" --r
 skip the sudo command if you are executing from within MS-Windows.
 
 If it fails, it will show you a device list. Check the device number or device name of your keyboard, it shows on the left.
-If you have a gamecontroller, which should have at least 20 keys, use that devicenumber or device name, otherwise use the keyboard.
-Fill in the device number or device name in the source code, which is very important! Next, try to execute or run it again.
+If you have a gamecontroller, which should have at least 5, 10, 15 or 20 keys, use that devicenumber or device name, otherwise use the keyboard. In case you have less than 20 keys available, use 5, 10 or 15 as the number of keys you have on your device. Please adjust the variable called NumKeys accordingly.
+Fill in the device number or device name, and the number of keys, in the source code. Next, try to execute or run it again.
 It should work this time...
 
 It will be easiest if you change the devicename "Arduino Leonardo" into your particular devicename.

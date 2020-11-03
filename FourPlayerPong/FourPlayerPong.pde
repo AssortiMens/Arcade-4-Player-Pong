@@ -255,16 +255,16 @@ void draw() {
        }
       if (frameCounter>=21000) {
 
-        joy3.Highscore.Display();
-        if (joy4.y <= joy2.y) {
-          joy4.Highscore.Display();
-          joy2.Highscore.Display();
-         }
-        else {
-          joy2.Highscore.Display();
-          joy4.Highscore.Display();
-         }
         joy1.Highscore.Display();
+//        if (joy4.y <= joy2.y) {
+          joy2.Highscore.Display();
+          joy4.Highscore.Display();
+//         }
+//        else {
+//          joy2.Highscore.Display();
+//          joy4.Highscore.Display();
+//         }
+        joy3.Highscore.Display();
 
         joy3.Highscore.Update();
         joy4.Highscore.Update();
@@ -966,16 +966,15 @@ class Ball {
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
 String NaamLijst[] = {"William___","Bas_______","Arjan_____","Edwin_____","Michel____","Janru_____","Henri_____","Willeke___"};
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
-int PlayerAngle[] = {180,90,0,270};
+int PlayerAngle[] = {270,0,180,90};
 
-String Naam[] = {"_Aapje123_","__Betsy2__","__Carola__","_Dickhead_"};
+String Naam[] = {"__Arijan__","___Bert___","__Carola__","___Dave___"};
 char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
                       'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
                       'a','b','c','d','e','f','g','h','i','j','k','l','m',
                       'n','o','p','q','r','s','t','u','v','w','x','y','z',
                       '0','1','2','3','4','5','6','7','8','9','-','+','_',
-                      '=','[',']','{','}',';',':','<','>','?',' ','!','@'
-                     };
+                      '=','.','{',',','}',';',':','<','>','?',' ','@','!'};
 
 boolean Once[] = {false,false,false,false};
 boolean CollectedFireButtons[] = {false,false,false,false};
@@ -994,9 +993,13 @@ class Highscore {
   int CursorY = 0;
   int KarCount = 64;
   char Cursor = '_';
+  char chars[] = {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
+
   boolean RepKey[] = {false,false,false,false,false};
   
-  Highscore(int tScore,int tplayerX) {
+  Highscore(int tScore, int tplayerX) {
+//   char chars2[11];
+
    Score = tScore;
    CursorX = 0;
    CursorY = 0;
@@ -1010,17 +1013,18 @@ class Highscore {
    }
    Once[playerX] = false;
    CollectedFireButtons[playerX] = false;
-   char[] chars2 = Naam[playerX].toCharArray();
-   Cursor = chars2[CursorX];
+   chars = Naam[playerX].toCharArray();
+   Cursor = chars[CursorX];
    for (int j=0;j<78;j++) {
      if (Cursor == KarakterSet[j]) {
        KarCount = j;
        continue;
       }
     }
+   KarCount %= 78;
    Cursor = KarakterSet[KarCount];
-   chars2[CursorX] = Cursor;
-   Naam[playerX] = String.valueOf(chars2);
+   chars[CursorX] = Cursor;
+   Naam[playerX] = String.valueOf(chars);
    insert();
   }
 
@@ -1041,7 +1045,7 @@ class Highscore {
       NaamLijst[i]=Naam[playerX];
       CursorY=i;
       for (int k=playerX-1;k>=0;k--) {
-        if (CursorY < (Joys[k].Highscore.CursorY)) {
+        if (CursorY <= (Joys[k].Highscore.CursorY)) {
           Joys[k].Highscore.CursorY++;
         }
       }
@@ -1051,17 +1055,20 @@ class Highscore {
   }
 
  void Display() {
-  Joystick Joys[] = {joy3,joy4,joy1,joy2};
+  Joystick Joys[] = {joy4,joy3,joy1,joy2};
   
-  Joys[0] = joy3;
-  Joys[1] = joy4;
+  Joys[0] = joy4;
+  Joys[1] = joy3;
   Joys[2] = joy1;
   Joys[3] = joy2;
   for (int i=0;i<8;i++){
     pushMatrix();
-    translate((width/2)+(330*(Joys[playerX].yOrient)),(height/2)+(230*(Joys[playerX].xOrient)));
+    translate(((width/2)-(((width-320)/2)*(Joys[playerX].yOrient))),((height/2)-(((height-320)/2)*(Joys[playerX].xOrient))));
     rotate(radians(PlayerAngle[playerX]));
-    fill(255,255,255);
+
+//    fill(255,255,255);
+    fill((CursorY==i)?(Joys[playerX].Color):color(255,255,255));
+
     textSize(20);
     textAlign(CENTER,CENTER);
     text(Order[i],-100,20*i);
@@ -1073,8 +1080,9 @@ class Highscore {
 
  void Update()
  {
-  int i,j,k;
+  int      i,j,k;
   Joystick Joys[] = {joy3,joy4,joy1,joy2};
+//  char     Chars[11],chars[11];
 
   Joys[0] = joy3;
   Joys[1] = joy4;
@@ -1087,7 +1095,7 @@ class Highscore {
     }
 
    playerX %= 4;
-   char[] chars = Naam[playerX].toCharArray();
+   chars = Naam[playerX].toCharArray();
    CursorX %= 10;
    Cursor = chars[CursorX];
 
@@ -1239,40 +1247,24 @@ class Highscore {
     {
      XRepKeys[((NumKeysPerPlayer * playerX) + k)] = RepKey[k];
     }
+  }
 
 // Do strcpy(NaamLijst[CursorY],Naam[playerX]); here!
 //   memcpy(NaamLijst[CursorY],Naam[playerX],10);
 // This is your double buffering!
 
-   char[] Chars = Naam[playerX].toCharArray();
-   if (CursorY>7) {
-     if (!(Once[playerX])) {
-       println(Naam[playerX],", you dropped off the highscorelist!");
-       Once[playerX] = true;
-     }
-     else {
-       Once[playerX] = false;
-     }
-   }
-   else {
-     NaamLijst[CursorY & 7] = String.valueOf(Chars);
-   }
+  chars = Naam[playerX].toCharArray();
+  if (CursorY>7) {
+    if (!(Once[playerX])) {
+      println(Naam[playerX],", you dropped off the highscorelist!");
+      Once[playerX] = true;
+    }
+    else {
+      Once[playerX] = false;
+    }
   }
-  else
-  {
-   char[] Chars = Naam[playerX].toCharArray();
-   if (CursorY>7) {
-     if (!(Once[playerX])) {
-       println(Naam[playerX],", you dropped off the highscorelist!");
-       Once[playerX] = true;
-     }
-     else {
-       Once[playerX] = false;
-     }
-   }
-   else {
-     NaamLijst[CursorY & 7] = String.valueOf(Chars);
-   }
+  else {
+    NaamLijst[CursorY & 7] = String.valueOf(chars);
   }
  }
 }
