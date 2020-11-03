@@ -860,7 +860,7 @@ class Joystick {
     rect(x,y,w,h);
 
     pushMatrix();
-    translate(((width/2) - (((width-24)/2) * yOrient)),((height/2) - (((height-24)/2) * xOrient)));
+    translate(((width/2) - (((width-30)/2) * yOrient)),((height/2) - (((height-30)/2) * xOrient)));
     fill(255,255,255);
     textSize(20);
     textAlign(CENTER,CENTER);
@@ -968,7 +968,7 @@ String NaamLijst[] = {"William___","Bas_______","Arjan_____","Edwin_____","Miche
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
 int PlayerAngle[] = {270,0,180,90};
 
-String Naam[] = {"__Arijan__","___Bert___","__Carola__","___Dave___"};
+String Naam[] = {"William S.","Michel t B","_Edwin 13_","_J@nru K._"};
 char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
                       'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
                       'a','b','c','d','e','f','g','h','i','j','k','l','m',
