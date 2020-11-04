@@ -29,6 +29,6 @@ FourPlayerPong/
 
 FourPlayerPong/data
 
-Put the pde-file in map FourPlayerPong and create your data directory there also. Next, put your mp3-files in the data-map.
+Put the pde-file in map FourPlayerPong and create your data directory there also. Next, put your mp3-files in the data-map. Highscores are now saved in data/highscores.csv !
 
 Thank You!
