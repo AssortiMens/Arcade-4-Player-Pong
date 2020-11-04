@@ -63,6 +63,9 @@ int frameCounter = 0;
 int Kleur = -1;
 boolean Opkomst = true;
 
+Table table = null;
+int NumRows = 8;
+
 void setup() {
 //  size(1024,768);
   fullScreen();
@@ -84,6 +87,43 @@ void setup() {
   }
   catch (Exception e) {
     println("No sounds found!");
+    System.exit(0);
+  }
+  try {
+    table = loadTable("data/highscores.csv","header");
+    if (table != null) {
+      NumRows = table.getRowCount();
+      for (int i=0;i<NumRows;i++) {
+        TableRow row = table.getRow(i);
+        NaamLijst[i] = row.getString("name");
+        ScoreLijst[i] = row.getInt("score");
+      }
+    }
+    else {
+      println("table was null!");
+    }
+  }
+  catch (Exception e) {
+    println("Loading data/highscores.csv failed!");
+    System.exit(0);
+  }
+  try {
+    if (table != null) {
+      NumRows = 8;
+      table.setRowCount(NumRows);
+      for (int i=0;i<NumRows;i++) {
+        TableRow row = table.getRow(i);
+        row.setString("name", NaamLijst[i]);
+        row.setInt("score", ScoreLijst[i]);
+      }
+      saveTable(table, "data/highscores.csv");
+    }
+    else {
+      println("table == null!");
+    }
+  }
+  catch (Exception e) {
+    println("Error trying to save highscores!");
     System.exit(0);
   }
 
@@ -964,7 +1004,7 @@ class Ball {
 }
 
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
-String NaamLijst[] = {"William___","Bas_______","Arjan_____","Edwin_____","Michel____","Janru_____","Henri_____","Willeke___"};
+String NaamLijst[] = {"William_S.","Bas_______","_Arijan B_","_Edwin 13_","Michel t B","_Janru K._","Henri_____","Willeke___"};
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
 int PlayerAngle[] = {270,0,180,90};
 
