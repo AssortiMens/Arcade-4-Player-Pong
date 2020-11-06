@@ -89,6 +89,19 @@ void setup() {
     println("No sounds found!");
     System.exit(0);
   }
+
+  loadHighscores();
+  saveHighscores();
+
+  TextOrientation=0;
+  
+  titlesong.loop();
+  
+  demoMode();
+  initGame();
+}
+
+void loadHighscores() {
   try {
     table = loadTable("data/highscores.csv","header");
     if (table != null) {
@@ -107,6 +120,9 @@ void setup() {
     println("Loading data/highscores.csv failed!");
     System.exit(0);
   }
+}
+
+void saveHighscores() {
   try {
     if (table != null) {
       NumRows = 8;
@@ -119,20 +135,13 @@ void setup() {
       saveTable(table, "data/highscores.csv");
     }
     else {
-      println("table == null!");
+      println("table == null! Try loading first!");
     }
   }
   catch (Exception e) {
-    println("Error trying to save highscores!");
+    println("Error trying to save data/highscores.csv !");
     System.exit(0);
   }
-
-  TextOrientation=0;
-  
-  titlesong.loop();
-  
-  demoMode();
-  initGame();
 }
 
 void demoMode() {
@@ -311,7 +320,7 @@ void draw() {
         joy1.Highscore.Update();
         joy2.Highscore.Update();
 
-        if (frameCounter>=23000) {
+        if (frameCounter>=26000) {
           frameCounter=0;
           resetGame = true;
           
@@ -326,7 +335,9 @@ void draw() {
 //          for (int i=0;i<4;i++) {
 //            HumanPlayer[i] = false;
 //           }
+
           TestToResetGame();
+          saveHighscores();
          }
        }
      else
