@@ -320,7 +320,9 @@ void draw() {
         joy1.Highscore.Update();
         joy2.Highscore.Update();
 
-        if (frameCounter>=26000) {
+        TestToResetGame();
+
+        if (frameCounter>=31000) {
           frameCounter=0;
           resetGame = true;
           
@@ -337,7 +339,6 @@ void draw() {
 //           }
 
           TestToResetGame();
-          saveHighscores();
          }
        }
      else
@@ -382,11 +383,13 @@ boolean resetGame = false;
 void TestToResetGame() {
   if (resetGame == true)
    {
-    do
+    ButtonPressed();
+    while(buttonPressed == true)
     {
       ButtonPressed();
     }
-    while(buttonPressed == true);
+
+    saveHighscores();
 
     initGame();
     demoMode();
@@ -1118,7 +1121,7 @@ class Highscore {
     rotate(radians(PlayerAngle[playerX]));
 
 //    fill(255,255,255);
-    fill(((Joys[playerX].Highscore.CursorY)==i)?(Joys[playerX].Color):color(255,255,255));
+    fill(((Joys[playerX].Highscore.CursorY) == i)?(Joys[playerX].Color):(color(255,255,255)));
 
     textSize(20);
     textAlign(CENTER,CENTER);
@@ -1315,7 +1318,7 @@ class Highscore {
     }
   }
   else {
-    NaamLijst[CursorY & 7] = String.valueOf(chars);
+    NaamLijst[CursorY] = String.valueOf(chars);
   }
  }
 }
