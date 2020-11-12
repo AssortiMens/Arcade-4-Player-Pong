@@ -1020,7 +1020,7 @@ class Ball {
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
 String NaamLijst[] = {"William_S.","Bas_______","_Arijan B_","_Edwin 13_","Michel t B","_Janru K._","Henri_____","Willeke___"};
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
-int PlayerAngle[] = {270,0,180,90};
+int PlayerAngle[] = {0,270,180,90};
 
 String Naam[] = {"William S.","Michel t B","_Edwin 13_","_J@nru K._"};
 char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
@@ -1028,7 +1028,7 @@ char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
                       'a','b','c','d','e','f','g','h','i','j','k','l','m',
                       'n','o','p','q','r','s','t','u','v','w','x','y','z',
                       '0','1','2','3','4','5','6','7','8','9','-','+','_',
-                      '=','.','{',',','}',';',':','<','>','?',' ','@','!'};
+                      '=','.','(',',',')',';',':','<','>','?',' ','@','!'};
 
 boolean Once[] = {false,false,false,false};
 boolean CollectedFireButtons[] = {false,false,false,false};
@@ -1109,10 +1109,10 @@ class Highscore {
   }
 
  void Display() {
-  Joystick Joys[] = {joy4,joy3,joy1,joy2};
+  Joystick Joys[] = {joy3,joy4,joy1,joy2};
   
-  Joys[0] = joy4;
-  Joys[1] = joy3;
+  Joys[0] = joy3;
+  Joys[1] = joy4;
   Joys[2] = joy1;
   Joys[3] = joy2;
   for (int i=0;i<8;i++){
@@ -1121,7 +1121,8 @@ class Highscore {
     rotate(radians(PlayerAngle[playerX]));
 
 //    fill(255,255,255);
-    fill(((Joys[playerX].Highscore.CursorY) == i)?(Joys[playerX].Color):(color(255,255,255)));
+//    fill(((Joys[playerX].Highscore.CursorY) == i)?(Joys[playerX].Color):(color(255,255,255)));
+    fill((CursorY==i)?(Joys[playerX].Color):(color(255,255,255)));
 
     textSize(20);
     textAlign(CENTER,CENTER);
