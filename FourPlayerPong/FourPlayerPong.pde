@@ -1122,7 +1122,7 @@ class Highscore {
 
 //    fill(255,255,255);
 //    fill(((Joys[playerX].Highscore.CursorY) == i)?(Joys[playerX].Color):(color(255,255,255)));
-    fill((CursorY==i)?(Joys[playerX].Color):(color(255,255,255)));
+    fill(((HumanPlayer[playerX]==true)&&(CursorY==i))?(Joys[playerX].Color):(color(255,255,255)));
 
     textSize(20);
     textAlign(CENTER,CENTER);
