@@ -210,8 +210,8 @@ void initGame() {
 
   joy1 = new Joystick(30,30,1,0,color(255,0,255));
   joy2 = new Joystick(30,30,0,1,color(255,0,0));
-  joy3 = new Joystick(width-30,height-30,-1,0,color(0,255,0));
-  joy4 = new Joystick(width-30,height-30,0,-1,color(0,0,255));
+  joy4 = new Joystick(width-30,height-30,0,-1,color(0,255,0));
+  joy3 = new Joystick(width-30,height-30,-1,0,color(0,0,255));
   
   for (int i=0;i<NumBalls;i++)
   {
@@ -304,16 +304,16 @@ void draw() {
        }
       if (frameCounter>=21000) {
 
-        joy3.Highscore.Display();
+        joy3.Highscore.Display();    // Magenta
 //        if (joy4.y <= joy2.y) {
-          joy4.Highscore.Display();
-          joy1.Highscore.Display();
+          joy4.Highscore.Display();  // Red
+          joy2.Highscore.Display();  // Green
 //         }
 //        else {
-//          joy2.Highscore.Display();
-//          joy4.Highscore.Display();
+//          joy2.Highscore.Display();  // Red
+//          joy4.Highscore.Display();  // Blue
 //         }
-        joy2.Highscore.Display();
+        joy1.Highscore.Display();    // Blue
 
         joy3.Highscore.Update();
         joy4.Highscore.Update();
@@ -918,7 +918,7 @@ class Joystick {
     fill(255,255,255);
     textSize(20);
     textAlign(CENTER,CENTER);
-    rotate(radians(((abs(xOrient)) == 0)?(90 * yOrient):((abs(yOrient) == 0)?((90 * xOrient) + 90):0)));
+    rotate(radians(PlayerAngle[PNaampje&3])); // ((abs(xOrient)) == 0)?(90 * yOrient):((abs(yOrient) == 0)?((90 * xOrient) + 90):0)));
     text(Naam[(PNaampje&3)],-50,0);
     text(Score,50,0);
     popMatrix();
@@ -1022,7 +1022,7 @@ String NaamLijst[] = {"William_S.","Bas_______","_Arijan B_","_Edwin 13_","Miche
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
 int PlayerAngle[] = {0,270,180,90};
 
-String Naam[] = {"William S.","Michel t B","_Edwin 13_","_J@nru K._"};
+String Naam[] = {"Player 1  ","Player 2  ","Player 3  ","Player 4  "};
 char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
                       'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
                       'a','b','c','d','e','f','g','h','i','j','k','l','m',
@@ -1052,15 +1052,13 @@ class Highscore {
   boolean RepKey[] = {false,false,false,false,false};
   
   Highscore(int tScore, int tplayerX) {
-//   char chars2[11];
 
    Score = tScore;
+   playerX = tplayerX;
    CursorX = 0;
    CursorY = 0;
    KarCount = 0;
    Cursor = KarakterSet[KarCount];
-
-   playerX = tplayerX;
 
    for (int i=0;i<NumKeysPerPlayer;i++) {
      RepKey[i] = XRepKeys[((NumKeysPerPlayer * playerX) + i)];
@@ -1095,34 +1093,36 @@ class Highscore {
           ScoreLijst[j+1]=ScoreLijst[j];
           NaamLijst[j+1]=NaamLijst[j];
         }
-      ScoreLijst[i]=Score;
-      NaamLijst[i]=Naam[playerX];
-      CursorY=i;
-      for (int k=playerX-1;k>=0;k--) {
-        if (CursorY <= (Joys[k].Highscore.CursorY)) {
-          Joys[k].Highscore.CursorY++;
+        ScoreLijst[i]=Score;
+        NaamLijst[i]=Naam[playerX];
+        CursorY = i;
+        for (int k=0;k<playerX;k++) {
+          if ((Joys[k].Highscore != null)&&((CursorY) <= (Joys[k].Highscore.CursorY))) {
+            Joys[k].Highscore.CursorY += 1;
+          }
         }
+        return; // early out, or continue; ??
       }
-     return;
     }
-   }
+    CursorY = 8; // force to 8 if way below the lowest highscore!
   }
 
  void Display() {
+  int i;
   Joystick Joys[] = {joy3,joy4,joy1,joy2};
   
   Joys[0] = joy3;
   Joys[1] = joy4;
   Joys[2] = joy1;
   Joys[3] = joy2;
-  for (int i=0;i<8;i++){
+  for (i=0;i<8;i++) {
     pushMatrix();
     translate(((width/2)-(((width-320)/2)*(Joys[playerX].yOrient))),((height/2)-(((height-320)/2)*(Joys[playerX].xOrient))));
     rotate(radians(PlayerAngle[playerX]));
 
 //    fill(255,255,255);
 //    fill(((Joys[playerX].Highscore.CursorY) == i)?(Joys[playerX].Color):(color(255,255,255)));
-    fill(((HumanPlayer[playerX]==true)&&(CursorY==i))?(Joys[playerX].Color):(color(255,255,255)));
+    fill(((HumanPlayer[playerX] == true)&&(Joys[playerX].Highscore != null)&&((CursorY) == i))?(Joys[playerX].Color):(color(255,255,255)));
 
     textSize(20);
     textAlign(CENTER,CENTER);
@@ -1137,13 +1137,12 @@ class Highscore {
  {
   int      i,j,k;
   Joystick Joys[] = {joy3,joy4,joy1,joy2};
-//  char     Chars[11],chars[11];
 
   Joys[0] = joy3;
   Joys[1] = joy4;
   Joys[2] = joy1;
   Joys[3] = joy2;
-  if ((Joys[playerX].Highscore == this)&&(HumanPlayer[playerX] == true)) {
+  if ((CursorY < 8)&&(Joys[playerX].Highscore != null)&&(HumanPlayer[playerX] == true)) {
    for (j=0;j<NumKeysPerPlayer;j++)
     {
      RepKey[j] = XRepKeys[((playerX * NumKeysPerPlayer) + j)];
@@ -1280,7 +1279,6 @@ class Highscore {
            NumCollectedFireButtons = ((CollectedFireButtons[j])?(NumCollectedFireButtons + 1):(NumCollectedFireButtons));
           }
          if (NumCollectedFireButtons == NumHumanPlayers) {
-//           demoMode();
            resetGame = true;
           }
          RepKey[1] = true;
@@ -1309,7 +1307,7 @@ class Highscore {
 // This is your double buffering!
 
   chars = Naam[playerX].toCharArray();
-  if (CursorY>7) {
+  if (CursorY > 7) {
     if (!(Once[playerX])) {
       println(Naam[playerX],", you dropped off the highscorelist!");
       Once[playerX] = true;
