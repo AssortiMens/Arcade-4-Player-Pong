@@ -789,17 +789,19 @@ class Joystick {
 
     if (HumanPlayer[2]) {
       joy1.xDir = 0;
-      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[2]).pressed()):((key == 'a')))) { // &&(!keyPressed)))) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[2]).pressed()):((key == 'a')))) {
         joy1.xDir = 1;
       }
-//     else {
-      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[2]).pressed()):((key == 'd')))) { // &&(!keyPressed)))) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[2]).pressed()):((key == 'd')))) {
         joy1.xDir = -1;
       }
-//      else {
-//        joy1.xDir = 0;
-//      }
-    } // }
+      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[2]).pressed()):((key == 'f')))) {
+        w = (110*abs(xOrient))+10;
+      }
+      if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[2]).pressed()):((key == 'g')))) {
+        w = (50*abs(xOrient))+10;
+      }
+    }
     else {
       joy1.x = ball[0].x;
       joy1.xDir = 0;
@@ -807,17 +809,19 @@ class Joystick {
 
     if (HumanPlayer[3]) {
       joy2.yDir = 0;
-      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[3]).pressed()):((key == 'z')))) { // &&(!keyPressed)))) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[3]).pressed()):((key == 'z')))) {
         joy2.yDir = -1;
       }
-//      else {
-      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[3]).pressed()):((key == 'c')))) { // &&(!keyPressed)))) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[3]).pressed()):((key == 'c')))) {
         joy2.yDir = 1;
       }
-//      else {
-//        joy2.yDir = 0;
-//      }
-    } // }
+      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[3]).pressed()):((key == 'v')))) {
+        h = (110*abs(yOrient))+10;
+      }
+      if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[3]).pressed()):((key == 'b')))) {
+        h = (50*abs(yOrient))+10;
+      }
+    }
     else {
       joy2.y = ball[0].y;
       joy2.yDir = 0;
@@ -825,17 +829,19 @@ class Joystick {
     
     if (HumanPlayer[0]) {
       joy3.xDir = 0;
-      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[0]).pressed()):((key == '1')))) { // &&(!keyPressed)))) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[0]).pressed()):((key == '1')))) {
         joy3.xDir = -1;
       }
-//      else {
-      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[0]).pressed()):((key == '3')))) { // &&(!keyPressed)))) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[0]).pressed()):((key == '3')))) {
         joy3.xDir = 1;
       }
-//      else {
-//        joy3.xDir = 0;
-//      }
-    } // }
+      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[0]).pressed()):((key == '4')))) {
+        w = (110*abs(xOrient))+10;
+      }
+      if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[0]).pressed()):((key == '5')))) {
+        w = (50*abs(xOrient))+10;
+      }
+    }
     else {
       joy3.x = ball[0].x;
       joy3.xDir = 0;
@@ -843,36 +849,38 @@ class Joystick {
 
     if (HumanPlayer[1]) {
       joy4.yDir = 0;
-      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[1]).pressed()):((key == 'q')))) { // &&(!keyPressed)))) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[1]).pressed()):((key == 'q')))) {
         joy4.yDir = 1;
       }
-//      else {
-      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[1]).pressed()):((key == 'e')))) { // &&(!keyPressed)))) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[1]).pressed()):((key == 'e')))) {
         joy4.yDir = -1;
       }
-//      else {
-//        joy4.yDir = 0;
-//      }
-    } // }
+      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[1]).pressed()):((key == 'r')))) {
+        h = (110*abs(yOrient))+10;
+      }
+      if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[1]).pressed()):((key == 't')))) {
+        h = (50*abs(yOrient))+10;
+      }
+    }
     else {
       joy4.y = ball[0].y;
       joy4.yDir = 0;
     }
     
-    if ((x < 30) || (x > (width-30))) {
+    if ((x < (w/2)) || (x > (width-(w/2)))) {
       xDir = 0;
-      if (x < 30)
-        x = 30;
-      if (x > (width-30))
-        x = (width-30);
+      if (x < (w/2))
+        x = w/2;
+      if (x > (width-(w/2)))
+        x = (width-(w/2));
     }
 
-    if ((y < 30) || (y > (height-30))) {
+    if ((y < (h/2)) || (y > (height-(h/2)))) {
       yDir = 0;
-      if (y < 30)
-        y = 30;
-      if (y > (height-30))
-        y = (height-30);
+      if (y < (h/2))
+        y = h/2;
+      if (y > (height-(h/2)))
+        y = (height-(h/2));
     }
     
 // Joystick moves here!
