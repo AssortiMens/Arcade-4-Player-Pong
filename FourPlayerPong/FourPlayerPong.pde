@@ -705,11 +705,15 @@ void perFrameDemo3() {
   text("Hall of Fame",0,-160);
 
   for (int i=0;i<8;i++) {
+    textAlign(CENTER,CENTER);
     text(Order[i],-100,(30*i)-130);
-    text(NaamLijst[i],-40,(30*i)-130);
-    text(ScoreLijst[i],100,(30*i)-130);
+    textAlign(LEFT,CENTER);
+    text(NaamLijst[i],-80,(30*i)-130);
+    textAlign(RIGHT,CENTER);
+    text(ScoreLijst[i],120,(30*i)-130);
   }
   fill(255);
+  textAlign(CENTER,CENTER);
   text("Press a button to start",0,150);
   popMatrix();
 }
