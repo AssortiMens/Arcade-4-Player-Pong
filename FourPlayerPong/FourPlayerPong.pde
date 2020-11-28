@@ -771,7 +771,7 @@ class Joystick {
     yDir = tyDir;
     xOrient = xDir;
     yOrient = yDir;
-    w = (50*abs(xOrient))+1
+    w = (50*abs(xOrient))+10;
     h = (50*abs(yOrient))+10;
     Score = 0;
     for (int i=0;i<NumBalls;i++)
