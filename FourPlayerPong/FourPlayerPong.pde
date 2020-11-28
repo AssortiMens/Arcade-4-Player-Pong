@@ -72,7 +72,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice((KastVersie==3)?("Arduino Leonardo"):("AT Translated Set 2 keyboard"));
+    stick = control.getDevice((KastVersie==3)?("AT Translated Set 2 keyboard"):("AT Translated Set 2 keyboard"));
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
@@ -771,7 +771,7 @@ class Joystick {
     yDir = tyDir;
     xOrient = xDir;
     yOrient = yDir;
-    w = (50*abs(xOrient))+10;
+    w = (50*abs(xOrient))+1
     h = (50*abs(yOrient))+10;
     Score = 0;
     for (int i=0;i<NumBalls;i++)
