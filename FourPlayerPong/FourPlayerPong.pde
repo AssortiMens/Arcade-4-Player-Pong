@@ -72,7 +72,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice((KastVersie==3)?("AT Translated Set 2 keyboard"):("AT Translated Set 2 keyboard"));
+    stick = control.getDevice((KastVersie==3)?("Arduino Leonardo"):("AT Translated Set 2 keyboard"));
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
@@ -350,11 +350,11 @@ void draw() {
          TextOrientation %= 360;
          fill(255);
          textSize(TextSize++);
-         if (TextSize > 64) {
-           TextSize = 64;
+         if (TextSize > 128) {
+           TextSize = 128;
          }
          text("Game Over!",0,0);
-         text("Release all keys, please!",0,100);
+//         text("Release all keys, please!",0,100);
          popMatrix();
 
          /* flush all keys */
