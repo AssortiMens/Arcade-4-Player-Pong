@@ -929,10 +929,12 @@ class Joystick {
     translate(((width/2) - (((width-30)/2) * yOrient)),((height/2) - (((height-30)/2) * xOrient)));
     fill(255,255,255);
     textSize(20);
-    textAlign(CENTER,CENTER);
+//    textAlign(CENTER,CENTER);
     rotate(radians(PlayerAngle[PNaampje&3])); // ((abs(xOrient)) == 0)?(90 * yOrient):((abs(yOrient) == 0)?((90 * xOrient) + 90):0)));
-    text(Naam[(PNaampje&3)],-50,0);
-    text(Score,50,0);
+    textAlign(LEFT,CENTER);
+    text(Naam[(PNaampje&3)],-100,0);
+    textAlign(RIGHT,CENTER);
+    text(Score,100,0);
     popMatrix();
     PNaampje++;
     PNaampje &= 3;
