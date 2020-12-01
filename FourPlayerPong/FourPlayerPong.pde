@@ -870,11 +870,16 @@ class Joystick {
       joy4.y = ball[0].y;
       joy4.yDir = 0;
     }
+
+// Joystick moves here!
+
+    x += (joySpeed * xDir);
+    y += (joySpeed * yDir);
     
     if ((x < (w/2)) || (x > (width-(w/2)))) {
       xDir = 0;
       if (x < (w/2))
-        x = w/2;
+        x = (w/2);
       if (x > (width-(w/2)))
         x = (width-(w/2));
     }
@@ -882,15 +887,10 @@ class Joystick {
     if ((y < (h/2)) || (y > (height-(h/2)))) {
       yDir = 0;
       if (y < (h/2))
-        y = h/2;
+        y = (h/2);
       if (y > (height-(h/2)))
         y = (height-(h/2));
     }
-    
-// Joystick moves here!
-
-    x += (joySpeed * xDir);
-    y += (joySpeed * yDir);
     
 // Collision Detection here!
 
@@ -965,8 +965,12 @@ class Ball {
     x += (xSpeed * xDir);
     y += (ySpeed * yDir);
     
-    if (((x-r) < 0) || ((x+r) > width)) {
+    if ((x < r) || (x > (width-r))) {
       xDir = -xDir;
+//      if (x < r)
+//        x = r;
+//      if (x > (width-r))
+//        x = (width-r);
       if (Color == joy1.Color) {
         joy1.Score += 100;
         pong.trigger();
@@ -993,8 +997,13 @@ class Ball {
         uit.trigger();
       }
     }
-    if (((y-r) < 0) || ((y+r) > height)) {
+
+    if ((y < r) || (y > (height-r))) {
       yDir = -yDir;
+//      if (y < r)
+//        y = r;
+//      if (y > (height-r))
+//        y = (height-r);
       if (Color == joy1.Color) {
         joy1.Score += 100;
         pong.trigger();
