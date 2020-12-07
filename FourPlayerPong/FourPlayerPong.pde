@@ -7,7 +7,7 @@
 /*          Bas  Timmer          */
 /*        Arjan  Boeijink        */
 /*                               */
-/*   AssortiMens (C) 2018-2020   */
+/*   AssortiMens (C) 2018-2021   */
 /*********************************/
 /*          Kast-Versie          */
 /*********************************/
@@ -23,7 +23,7 @@ Minim minim;
 AudioPlayer titlesong;
 AudioSample ping;
 AudioSample pong;
-AudioSample uit;
+// AudioSample uit;
 
 ControlIO control;
 ControlDevice stick;
@@ -82,7 +82,7 @@ void setup() {
     minim = new Minim(this);
     ping = minim.loadSample("data/ping.mp3");
     pong = minim.loadSample("data/pong.mp3");
-    uit = minim.loadSample("data/uit.mp3");
+//    uit = minim.loadSample("data/uit.mp3");
     titlesong = minim.loadFile("data/12-dreams.mp3");
   }
   catch (Exception e) {
@@ -637,7 +637,7 @@ void perFrameDemo1() {
   TextOrientation %= 360;
   text("AssortiMens presents",0,-50);
   text("Pong",0,0);
-  text("© 2020",0,50);
+  text("© 2018 - 2021",0,50);
 
   fill(255);
   text("Press a button to start",0,150);
@@ -761,6 +761,8 @@ class Joystick {
   int w,h;
   int Score;
   boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
+  boolean HalfSize=false;
+  boolean DoubleSize=false;
   color Color = color(255,255,255);
   Highscore Highscore = null;
   
@@ -781,6 +783,8 @@ class Joystick {
     Color = tColor;
     Highscore = null;
     PNaampje = 2;
+    HalfSize = false;
+    DoubleSize = false;
   }
   
   void Update() {
@@ -793,17 +797,45 @@ class Joystick {
 
     if (HumanPlayer[2]) {
       joy1.xDir = 0;
+
       if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[2]).pressed()):((key == 'a')))) {
         joy1.xDir = 1;
       }
+
       if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[2]).pressed()):((key == 'd')))) {
         joy1.xDir = -1;
       }
+
       if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[2]).pressed()):((key == 'f')))) {
-        w = (110*abs(xOrient))+10;
+        if (!(DoubleSize)) {
+          if (Score > 30000) {
+            Score -= 30000;
+            DoubleSize = true;
+            w = (110*abs(xOrient))+10;
+          }
+        }
       }
+      else {
+        if ((abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
+          DoubleSize = false;
+          w = (50*abs(xOrient))+10;
+        }
+      }
+
       if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[2]).pressed()):((key == 'g')))) {
-        w = (50*abs(xOrient))+10;
+        if (!(HalfSize)) {
+          if (Score > 30000) {
+            Score += 10000;
+            HalfSize = true;
+            w = (20*abs(xOrient))+10;
+          }
+        }
+      }
+      else {
+        if ((abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
+          HalfSize = false;
+          w = (50*abs(xOrient))+10;
+        }
       }
     }
     else {
@@ -813,17 +845,45 @@ class Joystick {
 
     if (HumanPlayer[3]) {
       joy2.yDir = 0;
+
       if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[3]).pressed()):((key == 'z')))) {
         joy2.yDir = -1;
       }
+
       if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[3]).pressed()):((key == 'c')))) {
         joy2.yDir = 1;
       }
+
       if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[3]).pressed()):((key == 'v')))) {
-        h = (110*abs(yOrient))+10;
+        if (!(DoubleSize)) {
+          if (Score > 30000) {
+            Score -= 30000;
+            DoubleSize = true;
+            h = (110*abs(yOrient))+10;
+          }
+        }
       }
+      else {
+        if ((abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
+          DoubleSize = false;
+          h = (50*abs(yOrient))+10;
+        }
+      }
+
       if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[3]).pressed()):((key == 'b')))) {
-        h = (50*abs(yOrient))+10;
+        if (!(HalfSize)) {
+          if (Score > 30000) {
+            Score += 10000;
+            HalfSize = true;
+            h = (20*abs(yOrient))+10;
+          }
+        }
+      }
+      else {
+        if ((abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
+          HalfSize = false;
+          h = (50*abs(yOrient))+10;
+        }
       }
     }
     else {
@@ -833,17 +893,45 @@ class Joystick {
     
     if (HumanPlayer[0]) {
       joy3.xDir = 0;
+
       if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[0]).pressed()):((key == '1')))) {
         joy3.xDir = -1;
       }
+
       if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[0]).pressed()):((key == '3')))) {
         joy3.xDir = 1;
       }
+
       if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[0]).pressed()):((key == '4')))) {
-        w = (110*abs(xOrient))+10;
+        if (!(DoubleSize)) {
+          if (Score > 30000) {
+            Score -= 30000;
+            DoubleSize = true;
+            w = (110*abs(xOrient))+10;
+          }
+        }
       }
+      else {
+        if ((abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
+          DoubleSize = false;
+          w = (50*abs(xOrient))+10;
+        }
+      }
+
       if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[0]).pressed()):((key == '5')))) {
-        w = (50*abs(xOrient))+10;
+        if (!(HalfSize)) {
+          if (Score > 30000) {
+            Score += 10000;
+            HalfSize = true;
+            w = (20*abs(xOrient))+10;
+          }
+        }
+      }
+      else {
+        if ((abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
+          HalfSize = false;
+          w = (50*abs(xOrient))+10;
+        }
       }
     }
     else {
@@ -853,17 +941,45 @@ class Joystick {
 
     if (HumanPlayer[1]) {
       joy4.yDir = 0;
+
       if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(LinksToetsen[1]).pressed()):((key == 'q')))) {
         joy4.yDir = 1;
       }
+
       if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(RechtsToetsen[1]).pressed()):((key == 'e')))) {
         joy4.yDir = -1;
       }
+
       if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[1]).pressed()):((key == 'r')))) {
-        h = (110*abs(yOrient))+10;
+        if (!(DoubleSize)) {
+          if (Score > 30000) {
+            Score -= 30000;
+            DoubleSize = true;
+            h = (110*abs(yOrient))+10;
+          }
+        }
       }
+      else {
+        if ((abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
+          DoubleSize = false;
+          h = (50*abs(yOrient))+10;
+        }
+      }
+
       if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[1]).pressed()):((key == 't')))) {
-        h = (50*abs(yOrient))+10;
+        if (!(HalfSize)) {
+          if (Score > 30000) {
+            Score += 10000;
+            HalfSize = true;
+            h = (20*abs(yOrient))+10;
+          }
+        }
+      }
+      else {
+        if ((abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
+          HalfSize = false;
+          h = (50*abs(yOrient))+10;
+        }
       }
     }
     else {
@@ -967,10 +1083,10 @@ class Ball {
     
     if ((x < r) || (x > (width-r))) {
       xDir = -xDir;
-//      if (x < r)
-//        x = r;
-//      if (x > (width-r))
-//        x = (width-r);
+      if (x < r)
+        x = r;
+      if (x > (width-r))
+        x = (width-r);
       if (Color == joy1.Color) {
         joy1.Score += 100;
         pong.trigger();
@@ -993,17 +1109,18 @@ class Ball {
       else
       {
         fill(255);
+        textAlign(CENTER,CENTER);
         text("Smashed out!", width/2,height/2);
-        uit.trigger();
+//        uit.trigger();
       }
     }
 
     if ((y < r) || (y > (height-r))) {
       yDir = -yDir;
-//      if (y < r)
-//        y = r;
-//      if (y > (height-r))
-//        y = (height-r);
+      if (y < r)
+        y = r;
+      if (y > (height-r))
+        y = (height-r);
       if (Color == joy1.Color) {
         joy1.Score += 100;
         pong.trigger();
@@ -1026,8 +1143,9 @@ class Ball {
       else
       {
         fill(255);
+        textAlign(CENTER,CENTER);
         text("Smashed out!", width/2,height/2);
-        uit.trigger();
+//        uit.trigger();
       }
     }
   }
