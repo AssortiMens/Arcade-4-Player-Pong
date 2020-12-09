@@ -72,7 +72,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice((KastVersie==3)?("Arduino Leonardo"):("AT Translated Set 2 keyboard"));
+    stick = control.getDevice((KastVersie==3)?("Toetsenbord"):("AT Translated Set 2 keyboard"));
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
@@ -705,10 +705,10 @@ void perFrameDemo3() {
   text("Hall of Fame",0,-160);
 
   for (int i=0;i<8;i++) {
-    textAlign(CENTER,CENTER);
-    text(Order[i],-100,(30*i)-130);
     textAlign(LEFT,CENTER);
-    text(NaamLijst[i],-80,(30*i)-130);
+    text(Order[i],-120,(30*i)-130);
+    textAlign(LEFT,CENTER);
+    text(NaamLijst[i],-90,(30*i)-130);
     textAlign(RIGHT,CENTER);
     text(ScoreLijst[i],120,(30*i)-130);
   }
@@ -1266,10 +1266,13 @@ class Highscore {
     fill(((HumanPlayer[playerX] == true)&&(Joys[playerX].Highscore != null)&&((CursorY) == i))?(Joys[playerX].Color):(color(255,255,255)));
 
     textSize(20);
+    textAlign(LEFT,CENTER);
+    text(Order[i],-120,20*i);
+    textAlign(LEFT,CENTER);
+    text(NaamLijst[i],-90,20*i);
+    textAlign(RIGHT,CENTER);
+    text(ScoreLijst[i],120,20*i);
     textAlign(CENTER,CENTER);
-    text(Order[i],-100,20*i);
-    text(NaamLijst[i],0,20*i);
-    text(ScoreLijst[i],100,20*i);
     popMatrix();
   }
  }
