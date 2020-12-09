@@ -72,7 +72,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice((KastVersie==3)?("Toetsenbord"):("AT Translated Set 2 keyboard"));
+    stick = control.getDevice((KastVersie==3)?("Arduino Leonardo"):("AT Translated Set 2 keyboard"));
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
