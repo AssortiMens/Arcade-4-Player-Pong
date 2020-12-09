@@ -25,10 +25,14 @@ It will be easiest if you change the devicename "Arduino Leonardo" into your par
 
 Always try to maintain the following directory-structure:
 
-FourPlayerPong/
+FourPlayerPong/FPP
 
-FourPlayerPong/data
+FourPlayerPong/FPP/data
 
-Put the pde-file in map FourPlayerPong and create your data directory there also. Next, put your mp3-files in the data-map. Highscores are now saved in data/highscores.csv !
+FourPlayerPong/KeyChecker
+
+Put the FPP.pde-file in map FourPlayerPong/FPP and create your data directory there also. Next, put your mp3-files in the data-map. Highscores are now saved in data/highscores.csv !
+
+KeyChecker.pde should be in map FourPlayerPong/KeyChecker.
 
 Thank You!
