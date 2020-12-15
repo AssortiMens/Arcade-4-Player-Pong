@@ -46,14 +46,14 @@ int ballSpeed = 9;
 
 int NumKeys = 20; /* 20 voor de kast / Arduino */
 int TotalNumKeys = 120; // Normal keyboard, use 20 out of 120
-int TranslationConstance = 0; // 0 for no translation
+int TranslationConstance = 0; // 0 for no translation and kast / Arduino.
 int NumKeysPerPlayer = 5;
 
-int LinksToetsen[] = {0,5,10,15};
-int VuurKnoppen[] = {1,6,11,16};
-int RechtsToetsen[] = {2,7,12,17};
-int PlusToetsen[] = {3,8,13,18};
-int MinToetsen[] = {4,9,14,19};
+int LinksToetsen[] =  {TranslationConstance+0,TranslationConstance+5,TranslationConstance+10,TranslationConstance+15};
+int VuurKnoppen[] =   {TranslationConstance+1,TranslationConstance+6,TranslationConstance+11,TranslationConstance+16};
+int RechtsToetsen[] = {TranslationConstance+2,TranslationConstance+7,TranslationConstance+12,TranslationConstance+17};
+int PlusToetsen[] =   {TranslationConstance+3,TranslationConstance+8,TranslationConstance+13,TranslationConstance+18};
+int MinToetsen[] =    {TranslationConstance+4,TranslationConstance+9,TranslationConstance+14,TranslationConstance+19};
 
 int Player;
 int Key;
