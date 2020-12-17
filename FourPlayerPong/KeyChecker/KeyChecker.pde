@@ -5,7 +5,7 @@ ControlIO control;
 ControlDevice stick;
 
 int KastVersie=3;
-int NumKeys = 20; /* Maximum 102! */
+int NumKeys = 120; /* Maximum 120! */
 
 void setup() {
   size(1024,768);

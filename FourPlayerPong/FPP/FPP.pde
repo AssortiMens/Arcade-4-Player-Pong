@@ -826,7 +826,7 @@ class Joystick {
       }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[2]%TotalNumKeys).pressed()):((key == 'f')))) {
-        if (!(DoubleSize)) {
+        if ((!(DoubleSize))&&(!HalfSize)) {
           if (Score > 30000) {
             Score -= 30000;
             DoubleSize = true;
@@ -835,14 +835,14 @@ class Joystick {
         }
       }
       else {
-        if ((DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
           DoubleSize = false;
           w = (50*abs(xOrient))+10;
         }
       }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[2]%TotalNumKeys).pressed()):((key == 'g')))) {
-        if (!(HalfSize)) {
+        if ((!(HalfSize))&&(!DoubleSize)) {
           if (Score > 30000) {
             Score += 10000;
             HalfSize = true;
@@ -851,7 +851,7 @@ class Joystick {
         }
       }
       else {
-        if ((HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
           HalfSize = false;
           w = (50*abs(xOrient))+10;
         }
@@ -874,7 +874,7 @@ class Joystick {
       }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[3]%TotalNumKeys).pressed()):((key == 'v')))) {
-        if (!(DoubleSize)) {
+        if ((!(DoubleSize))&&(!HalfSize)) {
           if (Score > 30000) {
             Score -= 30000;
             DoubleSize = true;
@@ -883,14 +883,14 @@ class Joystick {
         }
       }
       else {
-        if ((DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
           DoubleSize = false;
           h = (50*abs(yOrient))+10;
         }
       }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[3]%TotalNumKeys).pressed()):((key == 'b')))) {
-        if (!(HalfSize)) {
+        if ((!(HalfSize))&&(!DoubleSize)) {
           if (Score > 30000) {
             Score += 10000;
             HalfSize = true;
@@ -899,7 +899,7 @@ class Joystick {
         }
       }
       else {
-        if ((HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
           HalfSize = false;
           h = (50*abs(yOrient))+10;
         }
@@ -922,7 +922,7 @@ class Joystick {
       }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[0]%TotalNumKeys).pressed()):((key == '4')))) {
-        if (!(DoubleSize)) {
+        if ((!(DoubleSize))&&(!HalfSize)) {
           if (Score > 30000) {
             Score -= 30000;
             DoubleSize = true;
@@ -931,14 +931,14 @@ class Joystick {
         }
       }
       else {
-        if ((DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
           DoubleSize = false;
           w = (50*abs(xOrient))+10;
         }
       }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[0]%TotalNumKeys).pressed()):((key == '5')))) {
-        if (!(HalfSize)) {
+        if ((!(HalfSize))&&(!DoubleSize)) {
           if (Score > 30000) {
             Score += 10000;
             HalfSize = true;
@@ -947,7 +947,7 @@ class Joystick {
         }
       }
       else {
-        if ((HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
           HalfSize = false;
           w = (50*abs(xOrient))+10;
         }
@@ -970,7 +970,7 @@ class Joystick {
       }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(PlusToetsen[1]%TotalNumKeys).pressed()):((key == 'r')))) {
-        if (!(DoubleSize)) {
+        if ((!(DoubleSize))&&(!HalfSize)) {
           if (Score > 30000) {
             Score -= 30000;
             DoubleSize = true;
@@ -979,14 +979,14 @@ class Joystick {
         }
       }
       else {
-        if ((DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
           DoubleSize = false;
           h = (50*abs(yOrient))+10;
         }
       }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&((KastVersie==3)?(stick.getButton(MinToetsen[1]%TotalNumKeys).pressed()):((key == 't')))) {
-        if (!(HalfSize)) {
+        if ((!(HalfSize))&&(!DoubleSize)) {
           if (Score > 30000) {
             Score += 10000;
             HalfSize = true;
@@ -995,7 +995,7 @@ class Joystick {
         }
       }
       else {
-        if ((HalfSize)&&(abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
+        if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
           HalfSize = false;
           h = (50*abs(yOrient))+10;
         }
