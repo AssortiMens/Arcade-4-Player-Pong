@@ -1266,9 +1266,9 @@ class Highscore {
       println(Naam[playerX],", you dropped off the highscorelist!");
       Once[playerX] = true;
     }
-    else {
-      Once[playerX] = false;
-    }
+//    else {
+//      Once[playerX] = false;
+//    }
   }
   else {
     NaamLijst[CursorY] = String.valueOf(chars);
