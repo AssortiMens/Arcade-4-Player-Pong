@@ -350,8 +350,8 @@ void draw() {
       if (frameCounter>=21000) {
 
         joy3.Highscore.Display();    // Magenta
-        joy4.Highscore.Display();  // Red
-        joy2.Highscore.Display();  // Green
+        joy4.Highscore.Display();    // Red
+        joy2.Highscore.Display();    // Green
         joy1.Highscore.Display();    // Blue
 
         joy3.Highscore.Update();
@@ -579,6 +579,8 @@ class Joystick {
   int xDir,yDir,xOrient,yOrient;
   int w,h;
   int Score;
+  int dtime = 250; // 250 frames = delta time
+  int ffc_time = 0; // future frameCounter time
   boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
   boolean HalfSize=false;
   boolean DoubleSize=false;
@@ -604,6 +606,8 @@ class Joystick {
     PNaampje = 2;
     HalfSize = false;
     DoubleSize = false;
+    dtime = 250;
+    ffc_time = 0;
   }
   
   void Update() {
@@ -631,11 +635,12 @@ class Joystick {
             Score -= 30000;
             DoubleSize = true;
             w = (110*abs(xOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter == ffc_time))) {
           DoubleSize = false;
           w = (50*abs(xOrient))+10;
         }
@@ -647,11 +652,12 @@ class Joystick {
             Score += 10000;
             HalfSize = true;
             w = (20*abs(xOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter % 1000)==0)) {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&(frameCounter == ffc_time)) {
           HalfSize = false;
           w = (50*abs(xOrient))+10;
         }
@@ -679,11 +685,12 @@ class Joystick {
             Score -= 30000;
             DoubleSize = true;
             h = (110*abs(yOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
           DoubleSize = false;
           h = (50*abs(yOrient))+10;
         }
@@ -695,11 +702,12 @@ class Joystick {
             Score += 10000;
             HalfSize = true;
             h = (20*abs(yOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&((frameCounter % 1000)==0)) {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
           HalfSize = false;
           h = (50*abs(yOrient))+10;
         }
@@ -727,11 +735,12 @@ class Joystick {
             Score -= 30000;
             DoubleSize = true;
             w = (110*abs(xOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
           DoubleSize = false;
           w = (50*abs(xOrient))+10;
         }
@@ -743,11 +752,12 @@ class Joystick {
             Score += 10000;
             HalfSize = true;
             w = (20*abs(xOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&((frameCounter % 1000)==0)) {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
           HalfSize = false;
           w = (50*abs(xOrient))+10;
         }
@@ -775,11 +785,12 @@ class Joystick {
             Score -= 30000;
             DoubleSize = true;
             h = (110*abs(yOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
           DoubleSize = false;
           h = (50*abs(yOrient))+10;
         }
@@ -791,11 +802,12 @@ class Joystick {
             Score += 10000;
             HalfSize = true;
             h = (20*abs(yOrient))+10;
+            ffc_time = (frameCounter + dtime);
           }
         }
       }
       else {
-        if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&((frameCounter % 1000)==0)) {
+        if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
           HalfSize = false;
           h = (50*abs(yOrient))+10;
         }
