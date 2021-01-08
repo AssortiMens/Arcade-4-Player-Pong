@@ -33,7 +33,7 @@ FourPlayerPong/FPP/data
 
 FourPlayerPong/KeyChecker
 
-Put the FPP.pde-file in map FourPlayerPong/FPP and create your data directory there also. Next, put your mp3-files in the data-map. Highscores are now saved in data/highscores.csv !
+Put the FPP.pde-file in map FourPlayerPong/FPP and create your data directory there also. Next, put your mp3-files in the data-map. Highscores are now saved in FourPlayerPong/FPP/data/highscores.csv !
 
 KeyChecker.pde should be in map FourPlayerPong/KeyChecker.
 
