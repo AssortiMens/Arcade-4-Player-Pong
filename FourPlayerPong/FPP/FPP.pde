@@ -313,11 +313,13 @@ void draw() {
         if (Key>0) {
           Player = (((Key-1)-TranslationConstance)%TotalNumKeys) / NumKeysPerPlayer;
           Key = (((Key-1)-TranslationConstance)%TotalNumKeys) % NumKeysPerPlayer;
+
           HumanPlayer[Player&3]=true;
           NumHumanPlayers = 0;
+
           for(int j=0;j<4;j++) {
             NumHumanPlayers = ((HumanPlayer[j])?(NumHumanPlayers+1):(NumHumanPlayers));
-          }
+           }
         }
       }
     }
@@ -567,7 +569,7 @@ class Joystick {
   int xDir,yDir,xOrient,yOrient;
   int w,h;
   int Score;
-  int dtime = 250; // 250 frames = delta time
+  int dtime = 250;  // 250 frames = delta time
   int ffc_time = 0; // future frameCounter time
   boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
   boolean HalfSize=false;
@@ -599,14 +601,48 @@ class Joystick {
   }
   
   void Update() {
-//    Joystick Joys[] = {joy1,joy2,joy3,joy4};
+//    Joystick Joys[] = {joy3,joy4,joy1,joy2};
     
-//    Joys[0] = joy1;
+//    Joys[0] = joy1; // Joys[PNaampje];
 //    Joys[1] = joy2;
 //    Joys[2] = joy3;
 //    Joys[3] = joy4;
 
-    if (HumanPlayer[2]) {
+//    if (HumanPlayer[PNaampje]) {
+//      Joys[PNaampje].xDir = 0;
+//      Joys[PNaampje].yDir = 0;  
+//      if (stick.getButton(LinksToetsen[PNaampje]%TotalNumKeys).pressed()) {
+
+////        if (xOrient == 1)
+////          xDir = -1; // Batje goes to the left?! At least that's what you might think!
+////        else if (xOrient == -1)
+////          xDir = 1;
+//        if (xOrient != 0)
+//          xDir = -(xOrient); // Dit zou ook kunnen.
+//        if (yOrient != 0)
+//          yDir = (yOrient);
+
+//      if (stick.getButton(RechtsToetsen[PNaampje]%TotalNumKeys).pressed()) {
+
+////        if (xOrient == 1)
+////          xDir = +1; // Batje goes to the right?! At least that's what you might think!
+////        else if (xOrient == -1)
+////          xDir = -1;
+//        if (xOrient != 0)
+//          xDir = (xOrient); // Dit zou ook kunnen.
+//        if (yOrient != 0)
+//          yDir = -(yOrient);
+
+//      if (stick.getButton(PlusToetsen[PNaampje]%TotalNumKeys).pressed()) {
+//        ;;;;;
+//      if (stick.getButton(MinToetsen[PNaampje]%TotalNumKeys).pressed()) {
+//        ;;;;;
+//    }
+//    PNaampje++;
+//    PNaampje &= 3;
+// } // end of Update()
+
+  if (HumanPlayer[2]) {
       joy1.xDir = 0;
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(LinksToetsen[2]%TotalNumKeys).pressed())) {
@@ -622,30 +658,34 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            w = (110*abs(xOrient))+10;
+            w = (110*abs(xOrient))+10; // h = (110*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter == ffc_time))) {
-        DoubleSize = false;
-        w = (50*abs(xOrient))+10;
-      }
+//      else {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter == ffc_time))) {
+          DoubleSize = false;
+          w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        }
+//      }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(MinToetsen[2]%TotalNumKeys).pressed())) {
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            w = (20*abs(xOrient))+10;
+            w = (20*abs(xOrient))+10; // h = (20*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&(frameCounter == ffc_time)) {
-        HalfSize = false;
-        w = (50*abs(xOrient))+10;
-      }
+//      else {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&(frameCounter == ffc_time)) {
+          HalfSize = false;
+          w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        }
+//      }
     }
     else {
       joy1.x = ball[0].x;
@@ -668,30 +708,34 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            h = (110*abs(yOrient))+10;
+            h = (110*abs(yOrient))+10; // w = (110*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
-        DoubleSize = false;
-        h = (50*abs(yOrient))+10;
-      }
+//      else {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
+          DoubleSize = false;
+          h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        }
+//      }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(MinToetsen[3]%TotalNumKeys).pressed())) {
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            h = (20*abs(yOrient))+10;
+            h = (20*abs(yOrient))+10; // w = (20*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
-        HalfSize = false;
-        h = (50*abs(yOrient))+10;
-      }
+//      else {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
+          HalfSize = false;
+          h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        }
+//      }
     }
     else {
       joy2.y = ball[0].y;
@@ -714,30 +758,34 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            w = (110*abs(xOrient))+10;
+            w = (110*abs(xOrient))+10; // h = (110*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
-        DoubleSize = false;
-        w = (50*abs(xOrient))+10;
-      }
+//      else {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
+          DoubleSize = false;
+          w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        }
+//      }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(MinToetsen[0]%TotalNumKeys).pressed())) {
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            w = (20*abs(xOrient))+10;
+            w = (20*abs(xOrient))+10; // h = (20*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
-        HalfSize = false;
-        w = (50*abs(xOrient))+10;
-      }
+//      else {
+        if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
+          HalfSize = false;
+          w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        }
+//      }
     }
     else {
       joy3.x = ball[0].x;
@@ -760,35 +808,51 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            h = (110*abs(yOrient))+10;
+            h = (110*abs(yOrient))+10; // w = (110*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
-        DoubleSize = false;
-        h = (50*abs(yOrient))+10;
-      }
+//      else {
+        if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
+          DoubleSize = false;
+          h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        }
+//      }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(MinToetsen[1]%TotalNumKeys).pressed())) {
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            h = (20*abs(yOrient))+10;
+            h = (20*abs(yOrient))+10; // w = (20*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
       }
-      if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
-        HalfSize = false;
-        h = (50*abs(yOrient))+10;
-      }
+//      else {
+        if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
+          HalfSize = false;
+          h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        }
+//      }
     }
     else {
       joy4.y = ball[0].y;
       joy4.yDir = 0;
     }
+
+// if ((!DoubleSize)&&(HalfSize)&&(frameCounter == ffc_time)) {
+//   HalfSize = false;
+//   w = (50*abs(xOrient))+10;
+//   h = (50*abs(yOrient))+10;
+// }
+
+// if ((DoubleSize)&&(!HalfSize)&&(frameCounter == ffc_time)) {
+//   DoubleSize = false;
+//   w = (50*abs(xOrient))+10;
+//   h = (50*abs(yOrient))+10;
+// }
 
 // Joystick moves here!
 
@@ -1038,10 +1102,10 @@ class Highscore {
             Joys[k].Highscore.CursorY += 1;
           }
         }
-        return; // early out, or continue; ??
+        return; // early out!
       }
     }
-    CursorY = 8; // force to 8 if way below the lowest highscore!
+    CursorY = 8; // force to 8 if below the lowest highscore!
   }
 
  void Display() {
@@ -1241,7 +1305,7 @@ class Highscore {
   }
 
 // Do strcpy(NaamLijst[CursorY],Naam[playerX]); here!
-//   memcpy(NaamLijst[CursorY],Naam[playerX],10);
+//    memcpy(NaamLijst[CursorY],Naam[playerX],10);
 // This is your double buffering!
 
   chars = Naam[playerX].toCharArray();
@@ -1250,9 +1314,6 @@ class Highscore {
       println(Naam[playerX],", you dropped off the highscorelist!");
       Once[playerX] = true;
     }
-//    else {
-//      Once[playerX] = false;
-//    }
   }
   else {
     NaamLijst[CursorY] = String.valueOf(chars);
