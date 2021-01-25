@@ -225,10 +225,10 @@ void initGame() {
      }
   }
 
-  joy1 = new Joystick(30,30,1,0,color(255,0,255));
-  joy2 = new Joystick(30,30,0,1,color(255,0,0));
-  joy4 = new Joystick(width-30,height-30,0,-1,color(0,255,0));
-  joy3 = new Joystick(width-30,height-30,-1,0,color(0,0,255));
+  joy1 = new Joystick(width/2,30,1,0,color(255,0,255));
+  joy2 = new Joystick(30,height/2,0,1,color(255,0,0));
+  joy4 = new Joystick(width-30,height/2,0,-1,color(0,255,0));
+  joy3 = new Joystick(width/2,height-30,-1,0,color(0,0,255));
   
   for (int i=0;i<NumBalls;i++)
   {
