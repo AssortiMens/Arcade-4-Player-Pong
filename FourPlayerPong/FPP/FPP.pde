@@ -13,10 +13,13 @@
 /*********************************/
 
 import org.gamecontrolplus.*;
-
 import ddf.minim.*;
+import processing.serial.*;
 
+Serial serial;
 Minim minim;
+
+int Lampjes;
 
 AudioPlayer titlesong;
 AudioSample ping;
@@ -24,6 +27,7 @@ AudioSample pong;
 // AudioSample uit;
 
 ControlIO control;
+//Serial serial;
 ControlDevice stick;
 
 int TextOrientation = 0;
@@ -106,7 +110,20 @@ void setup() {
     println("No sounds found!");
     System.exit(0);
   }
+  try {
+    printArray(Serial.list());
+    serial = new Serial(this, Serial.list()[0], 9600);
+    serial.bufferUntil(0);
+  }
+  catch (Exception e) {
+    print("Could not open serial device!\n");
+    System.exit(0);
+  }
 
+  Lampjes = 0;
+  ser_Build_Msg_String_And_Send(Lampjes);
+  // frameRate(100);
+  
   loadHighscores();
   saveHighscores();
 
@@ -116,6 +133,95 @@ void setup() {
   
   demoMode();
   initGame();
+}
+
+
+String TestBuffer = "w 255 255 255\n\r";
+String TestBuffer2;
+int OldCode = 0;
+
+void ser_Build_Msg_String_And_Send(int tCode)
+{
+  char chars[] = {'w',' ','2','5','5',' ','2','5','5',' ','2','5','5','\n','\r','\0'};
+  char FastHex[] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+  char header = 'w';
+  char delimiter = ' ';
+  int  msb = 0;
+  int  hsb = 0;
+  int  lsb = 0;
+  char eos1 = '\n';
+  char eos2 = '\r';
+  char eos3 = (char)'\0';
+  int numKars = 0;
+  boolean msbwasgroter = false;
+  boolean hsbwasgroter = false;
+  boolean lsbwasgroter = false;
+  int len = 0;
+
+  if (OldCode != tCode) {
+    chars = TestBuffer.toCharArray();
+    msb = ((((tCode)>>16)&255) | 0);
+    hsb = ((((tCode)>>8)&255) | 0);
+    lsb = (((tCode)&255) | 0);
+    numKars = 0;
+    chars[numKars++] = header;
+    chars[numKars++] = delimiter;
+    if ((msb)>=100) {
+      chars[numKars++] = FastHex[msb/100];
+      msbwasgroter=true;
+    }
+    else {
+      msbwasgroter=false;
+    }
+    msb %= 100;
+    if (((msb)>=10)||(msbwasgroter)) {
+      chars[numKars++] = FastHex[msb/10];
+    }
+    msb %= 10;
+    chars[numKars++] = FastHex[msb];
+    chars[numKars++] = delimiter;
+    if ((hsb)>=100) {
+      chars[numKars++] = FastHex[hsb/100];
+      hsbwasgroter=true;
+    }
+    else {
+      hsbwasgroter=false;
+    }
+    hsb %= 100;
+    if (((hsb)>=10)||(hsbwasgroter)) {
+      chars[numKars++] = FastHex[hsb/10];
+    }
+    hsb %= 10;
+    chars[numKars++] = FastHex[hsb];
+    chars[numKars++] = delimiter;
+    if ((lsb)>=100) {
+      chars[numKars++] = FastHex[lsb/100];
+      lsbwasgroter=true;
+    }
+    else {
+      lsbwasgroter=false;
+    }
+    lsb %= 100;
+    if (((lsb)>=10)||(lsbwasgroter)) {
+      chars[numKars++] = FastHex[lsb/10];
+    }
+    lsb %= 10;
+    chars[numKars++] = (char)FastHex[lsb];
+    chars[numKars++] = (char)eos1;
+    chars[numKars++] = (char)eos2;
+    chars[numKars] = (char)eos3;
+
+    len = numKars;
+
+    TestBuffer = (String.valueOf(chars));
+    TestBuffer2 = TestBuffer.substring(0,len);
+    print(TestBuffer2); //.substring(0,len));
+    for (int i=0;i<len;i++) {
+      print(chars[i]);
+      serial.write((chars[i]));
+    }
+    OldCode = tCode;
+  }
 }
 
 void loadHighscores() {
@@ -247,6 +353,9 @@ void draw() {
   verschil = millis2 - millis1;
 //  println(verschil);
 
+  ser_Build_Msg_String_And_Send(Lampjes);
+//  Lampjes++;
+  
   if (frameCounter<1000) {
     perFrameDemo1();
   }
@@ -307,12 +416,16 @@ void draw() {
       }
       popMatrix();
 
+      Lampjes = 0;
+
       for (int i=TranslationConstance;i<(NumKeys+TranslationConstance);i++) {
         Key=keysPressed[(i)%TotalNumKeys];
         keysPressed[(i)%TotalNumKeys]=0;
         if (Key>0) {
           Player = (((Key-1)-TranslationConstance)%TotalNumKeys) / NumKeysPerPlayer;
           Key = (((Key-1)-TranslationConstance)%TotalNumKeys) % NumKeysPerPlayer;
+
+          Lampjes |= (1<<((Player*NumKeysPerPlayer)+Key));
 
           HumanPlayer[Player&3]=true;
           NumHumanPlayers = 0;
@@ -343,6 +456,8 @@ void draw() {
         joy4.Highscore.Display();    // Red
         joy2.Highscore.Display();    // Green
         joy1.Highscore.Display();    // Blue
+
+        Lampjes = 0;
 
         joy3.Highscore.Update();
         joy4.Highscore.Update();
@@ -552,7 +667,9 @@ void perFrameGame() {
   {
     ball[i].Display();
   }
-  
+
+  Lampjes = 0;
+
   joy1.Update();
   joy2.Update();
   joy3.Update();
@@ -647,13 +764,16 @@ class Joystick {
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(LinksToetsen[2]%TotalNumKeys).pressed())) {
         joy1.xDir = 1;
+        Lampjes |= (1<<(LinksToetsen[2]-TranslationConstance));
       }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(RechtsToetsen[2]%TotalNumKeys).pressed())) {
         joy1.xDir = -1;
+        Lampjes |= (1<<(RechtsToetsen[2]-TranslationConstance));
       }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(PlusToetsen[2]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(PlusToetsen[2]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -669,6 +789,7 @@ class Joystick {
       }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(MinToetsen[2]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(MinToetsen[2]-TranslationConstance));
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
@@ -693,13 +814,16 @@ class Joystick {
 
       if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(LinksToetsen[3]%TotalNumKeys).pressed())) {
         joy2.yDir = -1;
+        Lampjes |= (1<<(LinksToetsen[3]-TranslationConstance));
       }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(RechtsToetsen[3]%TotalNumKeys).pressed())) {
         joy2.yDir = 1;
+        Lampjes |= (1<<(RechtsToetsen[3]-TranslationConstance));
       }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(PlusToetsen[3]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(PlusToetsen[3]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -715,6 +839,7 @@ class Joystick {
       }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(MinToetsen[3]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(MinToetsen[3]-TranslationConstance));
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
@@ -739,13 +864,16 @@ class Joystick {
 
       if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(LinksToetsen[0]%TotalNumKeys).pressed())) {
         joy3.xDir = -1;
+        Lampjes |= (1<<(LinksToetsen[0]-TranslationConstance));
       }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(RechtsToetsen[0]%TotalNumKeys).pressed())) {
         joy3.xDir = 1;
+        Lampjes |= (1<<(RechtsToetsen[0]-TranslationConstance));
       }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(PlusToetsen[0]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(PlusToetsen[0]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -761,6 +889,7 @@ class Joystick {
       }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(MinToetsen[0]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(MinToetsen[0]-TranslationConstance));
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
@@ -785,13 +914,16 @@ class Joystick {
 
       if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(LinksToetsen[1]%TotalNumKeys).pressed())) {
         joy4.yDir = 1;
+        Lampjes |= (1<<(LinksToetsen[1]-TranslationConstance));
       }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(RechtsToetsen[1]%TotalNumKeys).pressed())) {
         joy4.yDir = -1;
+        Lampjes |= (1<<(RechtsToetsen[1]-TranslationConstance));
       }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(PlusToetsen[1]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(PlusToetsen[1]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -807,6 +939,7 @@ class Joystick {
       }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(MinToetsen[1]%TotalNumKeys).pressed())) {
+        Lampjes |= (1<<(MinToetsen[1]-TranslationConstance));
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
@@ -1141,6 +1274,7 @@ class Highscore {
 
    if (stick.getButton(PlusToetsen[playerX]%TotalNumKeys).pressed())
      {
+       Lampjes |= (1<<(PlusToetsen[playerX]-TranslationConstance));
        if (!(RepKey[3])) {
          for (i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
@@ -1169,6 +1303,7 @@ class Highscore {
 
    if (stick.getButton(MinToetsen[playerX]%TotalNumKeys).pressed())
      {
+       Lampjes |= (1<<(MinToetsen[playerX]-TranslationConstance));
        if (!(RepKey[4])) {
          for (i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
@@ -1197,6 +1332,7 @@ class Highscore {
 
    if (stick.getButton(LinksToetsen[playerX]%TotalNumKeys).pressed())
      {
+       Lampjes |= (1<<(LinksToetsen[playerX]-TranslationConstance));
        if (!(RepKey[0])) {
          CursorX--;
 
@@ -1225,6 +1361,7 @@ class Highscore {
 
    if (stick.getButton(RechtsToetsen[playerX]%TotalNumKeys).pressed())
      {
+       Lampjes |= (1<<(RechtsToetsen[playerX]-TranslationConstance));
        if (!(RepKey[2])) {
          CursorX++;
 
@@ -1253,6 +1390,7 @@ class Highscore {
 
    if (stick.getButton(VuurKnoppen[playerX]%TotalNumKeys).pressed())
      {
+       Lampjes |= (1<<(VuurKnoppen[playerX]-TranslationConstance));
        if (!(RepKey[1])) {
          for (i=(0+TranslationConstance);i<(NumKeys+TranslationConstance);i++) {
            keysPressed[i]=0;
