@@ -25,6 +25,8 @@ It will be easiest if you change the devicename "Arduino Leonardo" into your par
 
 In case you want to play with a standard keyboard and translate a keyrange differently, you should run KeyChecker before the game to find out which codes are generated for the keyrange you would like to use. The keyrange should always be in ascending order and is always depending on the lowest keycode, which should be put in variable called TranslationConstance. Example: run KeyChecker and find the lowest keycode of the keyrange you want to use. Let's say you want to use keyrange 1 to 0. Just press the key which carries the sign '1' and remember the code it generates. Next, unload KeyChecker.pde and load the game FPP.pde. Change the variable called TranslationConstance and set it to the code you were trying to remember and you're set to go.
 
+Be carefull when using your com-ports for midi! Be selective about what ports you use for midi. You might consider disconnecting your midi-interface if you have one. This game uses a com-port to stear some lights belonging to the buttons that are pressed! It might not be of your interest, but it does a serial write at 9600 baud on the com-port as defined in the source. It actually writes an ascii string containing some parameters as shown on the debug screen.
+
 Always try to maintain the following directory-structure:
 
 FourPlayerPong/FPP

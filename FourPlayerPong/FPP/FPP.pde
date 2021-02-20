@@ -27,7 +27,6 @@ AudioSample pong;
 // AudioSample uit;
 
 ControlIO control;
-//Serial serial;
 ControlDevice stick;
 
 int TextOrientation = 0;
@@ -352,10 +351,7 @@ void draw() {
   millis2 = millis();
   verschil = millis2 - millis1;
 //  println(verschil);
-
-  ser_Build_Msg_String_And_Send(Lampjes);
-//  Lampjes++;
-  
+ 
   if (frameCounter<1000) {
     perFrameDemo1();
   }
@@ -500,7 +496,10 @@ void draw() {
     else
       frameCounter=0;
   }
-}
+
+  ser_Build_Msg_String_And_Send(Lampjes);
+ 
+} // End of draw()
 
 boolean resetGame = false;
 
