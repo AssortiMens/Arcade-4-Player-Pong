@@ -47,7 +47,7 @@ int ballSpeed = 10;
 
 int NumKeys = 20; /* 20 voor de kast / Arduino */
 int TotalNumKeys = 120; // Normal keyboard, use 20 out of 120
-int TranslationConstance = 0; // 0 for no translation and kast / Arduino.
+int TranslationConstance = 1; // 0 for no translation and kast / Arduino.
 int NumKeysPerPlayer = 5;
 
 int LinksToetsen[] =  {TranslationConstance+0,TranslationConstance+5,TranslationConstance+10,TranslationConstance+15};
@@ -92,7 +92,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice("Arduino Leonardo"); // devicename or device number here.
+    stick = control.getDevice("AT Translated Set 2 keyboard"); // devicename or device number here.
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
@@ -551,9 +551,14 @@ void perFrameDemo1() {
       Opkomst=true;
     }
   }
+  int Afmeting = Kleur/2;
+  if (Afmeting > 19)
+    Afmeting = 19;
+  if (Afmeting < 0)
+    Afmeting = 0;
   pushMatrix();
   fill(Kleur);
-  textSize(20);
+  textSize(Afmeting+1);
   translate(width/2,height/2);
   textAlign(CENTER,CENTER);
   rotate(radians(TextOrientation++));
@@ -584,9 +589,14 @@ void perFrameDemo2() {
       Opkomst=true;
     }
   }
+  int Afmeting = Kleur/2;
+  if (Afmeting > 19)
+    Afmeting = 19;
+  if (Afmeting < 0)
+    Afmeting = 0;
   pushMatrix();
   fill(Kleur);
-  textSize(20);
+  textSize(Afmeting+1);
   translate(width/2,height/2);
   textAlign(CENTER,CENTER);
   rotate(radians(TextOrientation++));
@@ -618,9 +628,14 @@ void perFrameDemo3() {
       Opkomst=true;
     }
   }
+  int Afmeting = Kleur/2;
+  if (Afmeting > 19)
+    Afmeting = 19;
+  if (Afmeting < 0)
+    Afmeting = 0;
   pushMatrix();
   fill(Kleur);
-  textSize(20);
+  textSize(Afmeting+1);
   translate(width/2,height/2);
   textAlign(CENTER,CENTER);
   rotate(radians(TextOrientation++));
@@ -644,14 +659,35 @@ void perFrameDemo3() {
 void perFrameDemo4() {
   background(0);
   perFrameGame();
+  if (Opkomst) {
+    Kleur++;
+    if (Kleur>255)
+      Kleur=255;
+    if ((frameCounter % 1000) == 1000-255) {
+      Opkomst=false;
+    }
+  }
+  else {
+    Kleur--;
+    if (Kleur<0) {
+      Kleur=0;
+      Opkomst=true;
+    }
+  }
+  int Afmeting = Kleur/2;
+  if (Afmeting > 19)
+    Afmeting = 19;
+  if (Afmeting < 0)
+    Afmeting = 0;
   pushMatrix();
-  textSize(20);
-  fill(255);
+  fill(Kleur);
+  textSize(Afmeting+1);
   translate(width/2,height/2);
   textAlign(CENTER,CENTER);
   rotate(radians(TextOrientation++));
   TextOrientation %= 360;
   text("DEMO",0,0);
+  fill(255);
   text("Press a button to start",0,150);
   popMatrix();
 }
@@ -1092,7 +1128,7 @@ class Ball {
       {
         fill(255);
         textAlign(CENTER,CENTER);
-        text("Smashed out!", width/2,height/2);
+//        text("Smashed out!", width/2,height/2);
 //        uit.trigger();
       }
     }
@@ -1126,7 +1162,7 @@ class Ball {
       {
         fill(255);
         textAlign(CENTER,CENTER);
-        text("Smashed out!", width/2,height/2);
+//        text("Smashed out!", width/2,height/2);
 //        uit.trigger();
       }
     }
