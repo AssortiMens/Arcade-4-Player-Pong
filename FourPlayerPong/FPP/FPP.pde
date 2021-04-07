@@ -341,6 +341,24 @@ void initGame() {
   }
 }
 
+int CalcLicht() {
+  int LichtCode;
+
+  LichtCode = CyclicBuffer[(frameCounter / 2) % 80];
+//  LichtCode = int(random(1048576));
+  LichtCode &= 1048575;
+  return LichtCode;
+}
+
+int CyclicBuffer[] = {1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,
+                      32768,65536,131072,262144,524288,
+                      524288,262144,131072,65536,32768,16384,8192,4096,2048,1024,
+                      512,256,128,64,32,16,8,4,2,1,
+                      1,3,7,15,31,63,127,255,511,1023,2047,4095,8191,16383,
+                      32767,65535,131071,262143,524287,1048575,
+                      -1,-2,-4,-8,-16,-32,-64,-128,-256,-512,-1024,-2048,-4096,-8192,
+                      -16384,-32768,-65536,-131072,-262144,-524288,-1048576};
+
 int millis1 = 0;
 int millis2 = 0;
 int verschil = 0;
@@ -352,7 +370,10 @@ void draw() {
   verschil = millis2 - millis1;
 //  println(verschil);
 
-  Lampjes = 0;
+  if (frameCounter < 10000)
+    Lampjes = CalcLicht(); //int(random(1048576));
+  else
+    Lampjes = 0;
  
   if (frameCounter<1000) {
     perFrameDemo1();
@@ -525,12 +546,12 @@ void ButtonPressed() {
   for (int z=TranslationConstance;z<(NumKeys+TranslationConstance);z++) {
     if (stick.getButton(z % TotalNumKeys).pressed()) {
       buttonPressed = true;
-      keysPressed[z] = (z+1);
+      keysPressed[z] = (int)(z + 1);
     }
     else
-     {
+    {
       keysPressed[z] = 0;
-     }
+    }
   }
 }
 
@@ -760,7 +781,7 @@ class Joystick {
 
 //    if (HumanPlayer[PNaampje]) {
 //      Joys[PNaampje].xDir = 0;
-//      Joys[PNaampje].yDir = 0;
+//      Joys[PNaampje].yDir = 0;  
 //      if (stick.getButton(LinksToetsen[PNaampje]%TotalNumKeys).pressed()) {
 
 ////        if (xOrient == 1)
