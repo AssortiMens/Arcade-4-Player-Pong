@@ -25,6 +25,7 @@ AudioPlayer titlesong;
 AudioSample ping;
 AudioSample pong;
 // AudioSample uit;
+AudioOutput out;
 
 ControlIO control;
 ControlDevice stick;
@@ -104,6 +105,8 @@ void setup() {
     pong = minim.loadSample("data/pong.mp3");
 //    uit = minim.loadSample("data/uit.mp3");
     titlesong = minim.loadFile("data/12-dreams.mp3");
+    out = minim.getLineOut();
+//   out.addListener();
   }
   catch (Exception e) {
     println("No sounds found!");
@@ -369,6 +372,10 @@ void draw() {
   millis2 = millis();
   verschil = millis2 - millis1;
 //  println(verschil);
+
+  if (out.hasControl(Controller.VOLUME)) {
+    out.setVolume(0.1);
+  }
 
   if (frameCounter < 10000)
     Lampjes = CalcLicht(); //int(random(1048576));
