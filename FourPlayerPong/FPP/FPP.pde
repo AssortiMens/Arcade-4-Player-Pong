@@ -4,8 +4,8 @@
 /*      Geprogrammeerd door      */
 /*                               */
 /*         William  Senn         */
-/*          Bas  Timmer          */
-/*        Arjan  Boeijink        */
+/*          Bas  ......          */
+/*        Arjan  ........        */
 /*                               */
 /*   AssortiMens (C) 2018-2021   */
 /*********************************/
@@ -25,7 +25,6 @@ AudioPlayer titlesong;
 AudioSample ping;
 AudioSample pong;
 // AudioSample uit;
-AudioOutput out;
 
 ControlIO control;
 ControlDevice stick;
@@ -87,6 +86,9 @@ boolean Opkomst = true;
 Table table = null;
 int NumRows = 8;
 
+//AudioOutput out;
+//AudioInput in;
+
 void setup() {
 //  size(800,600);
   fullScreen();
@@ -105,8 +107,12 @@ void setup() {
     pong = minim.loadSample("data/pong.mp3");
 //    uit = minim.loadSample("data/uit.mp3");
     titlesong = minim.loadFile("data/12-dreams.mp3");
-    out = minim.getLineOut();
-//   out.addListener();
+//    out = minim.getLineOut();
+//    in = minim.getLineIn();
+//    out.addListener();
+//    in.setVolume((float)1.0e-2);
+//    ping.setVolume((float)1.0e-2);
+//    pong.setVolume((float)1.0e-2);
   }
   catch (Exception e) {
     println("No sounds found!");
@@ -114,7 +120,7 @@ void setup() {
   }
   try {
     printArray(Serial.list());
-    serial = new Serial(this, Serial.list()[0], 9600);
+    serial = new Serial(this, Serial.list()[1], 9600);
     serial.bufferUntil('\0');
   }
   catch (Exception e) {
@@ -373,9 +379,23 @@ void draw() {
   verschil = millis2 - millis1;
 //  println(verschil);
 
-  if (out.hasControl(Controller.VOLUME)) {
-    out.setVolume(0.1);
-  }
+//  if ( out.hasControl(Controller.VOLUME) )
+//  {
+    // map the mouse position to the range of the volume
+//    float val = map(mouseX, 0, width, 1, 0);
+    // if a volume control is not available, this will do nothing
+//    out.setVolume(5.0e-2);
+//    in.setVolume(5.0e-2);
+    // if a volume control is not available this will report zero
+//    text("The current volume is " + out.getVolume() + ".", 5, 15);
+//  }
+//  else
+//  if (out.hasControl(Controller.GAIN))
+//  {
+//    out.setGain(5.0e-1);
+//  }
+//  else
+//    Minim.error ( "Minim has no control over volume or gain!" );
 
   if (frameCounter < 10000)
     Lampjes = CalcLicht(); //int(random(1048576));
@@ -1203,7 +1223,7 @@ class Ball {
 }
 
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
-String NaamLijst[] = {"William_S.","Bas_______","_Arijan B_","_Edwin 13_","Michel t B","_Janru K._","Henri_____","Willeke___"};
+String NaamLijst[] = {"William S.","Bas ______","_Arjan ___","_Edwin ___","Michel ___","_J@nru ___","Henry ____","Willeke __"};
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
 int PlayerAngle[] = {0,270,180,90};
 
