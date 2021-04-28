@@ -92,6 +92,7 @@ int NumRows = 8;
 void setup() {
 //  size(800,600);
   fullScreen();
+  noCursor();
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
@@ -111,6 +112,7 @@ void setup() {
 //    in = minim.getLineIn();
 //    out.addListener();
 //    in.setVolume((float)1.0e-2);
+//    out.setVolume((float)1.0e-2);
 //    ping.setVolume((float)1.0e-2);
 //    pong.setVolume((float)1.0e-2);
   }
@@ -483,20 +485,20 @@ void draw() {
       }
     }
 
-    if ((frameCounter>=11000)&&(frameCounter<20000)){
+    if ((frameCounter>=11000)&&(frameCounter<21000)){
       background(0);
       perFrameGame();
     }
 //    frameCounter++;
-    if (frameCounter>=20000) {
+    if (frameCounter>=21000) {
       background(0);
-      if (frameCounter==20000) {
+      if (frameCounter==21000) {
         joy3.Highscore = new Highscore(joy3.Score,0);
         joy4.Highscore = new Highscore(joy4.Score,1);
         joy1.Highscore = new Highscore(joy1.Score,2);
         joy2.Highscore = new Highscore(joy2.Score,3);
        }
-      if (frameCounter>=21000) {
+      if (frameCounter>=22000) {
 
         joy3.Highscore.Display();    // Magenta
         joy4.Highscore.Display();    // Red
@@ -510,7 +512,7 @@ void draw() {
 
         TestToResetGame();
 
-        if (frameCounter>=31000) {
+        if (frameCounter>=32000) {
           frameCounter=0;
           resetGame = true;
           
@@ -767,7 +769,7 @@ class Joystick {
   int xDir,yDir,xOrient,yOrient;
   int w,h;
   int Score;
-  int dtime = 250;  // 250 frames = delta time
+  int dtime = 500;  // 500 frames = delta time
   int ffc_time = 0; // future frameCounter time
   boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
   boolean HalfSize=false;
@@ -794,7 +796,7 @@ class Joystick {
     PNaampje = 2;
     HalfSize = false;
     DoubleSize = false;
-    dtime = 250;
+    dtime = 500;
     ffc_time = 0;
   }
   
@@ -859,7 +861,7 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            w = (110*abs(xOrient))+10; // h = (110*abs(yOrient))+10;
+            w = ((width-10)*abs(xOrient))+10; // h = (110*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -909,7 +911,7 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            h = (110*abs(yOrient))+10; // w = (110*abs(xOrient))+10;
+            h = ((height-10)*abs(yOrient))+10; // w = (110*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -959,7 +961,7 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            w = (110*abs(xOrient))+10; // h = (110*abs(yOrient))+10;
+            w = ((width-10)*abs(xOrient))+10; // h = (110*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -1009,7 +1011,7 @@ class Joystick {
           if (Score >= 30000) {
             Score -= 30000;
             DoubleSize = true;
-            h = (110*abs(yOrient))+10; // w = (110*abs(xOrient))+10;
+            h = ((height-10)*abs(yOrient))+10; // w = (110*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -1084,16 +1086,13 @@ class Joystick {
           ball[i].Color = Color;
           if (abs(yOrient) == 1) {
             ball[i].xDir = -ball[i].xDir;
-            ping.trigger();
           }
           if (abs(xOrient) == 1) {
             ball[i].yDir = -ball[i].yDir;
-            ping.trigger();
           }
-
+          ping.trigger();
           collided[i] = true;
         }
-      
       }
       else {
         collided[i] = false;
@@ -1147,28 +1146,25 @@ class Ball {
     
     if ((x < r) || (x > (width-r))) {
       xDir = -xDir;
+      pong.trigger();
       if (x < r)
         x = r;
       if (x > (width-r))
         x = (width-r);
       if (Color == joy1.Color) {
         joy1.Score += 100;
-        pong.trigger();
       }
       else
       if (Color == joy2.Color) {
         joy2.Score += 100;
-        pong.trigger();
       }
       else
       if (Color == joy3.Color) {
         joy3.Score += 100;
-        pong.trigger();
       }
       else
       if (Color == joy4.Color) {
         joy4.Score += 100;
-        pong.trigger();
       }
       else
       {
@@ -1181,28 +1177,25 @@ class Ball {
 
     if ((y < r) || (y > (height-r))) {
       yDir = -yDir;
+      pong.trigger();
       if (y < r)
         y = r;
       if (y > (height-r))
         y = (height-r);
       if (Color == joy1.Color) {
         joy1.Score += 100;
-        pong.trigger();
       }
       else
       if (Color == joy2.Color) {
         joy2.Score += 100;
-        pong.trigger();
       }
       else
       if (Color == joy3.Color) {
         joy3.Score += 100;
-        pong.trigger();
       }
       else
       if (Color == joy4.Color) {
         joy4.Score += 100;
-        pong.trigger();
       }
       else
       {
