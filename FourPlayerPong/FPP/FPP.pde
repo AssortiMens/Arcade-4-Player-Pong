@@ -47,7 +47,7 @@ int ballSpeed = 10;
 
 int NumKeys = 20; /* 20 voor de kast / Arduino */
 int TotalNumKeys = 120; // Normal keyboard, use 20 out of 120
-int TranslationConstance = 0; // 0 for no translation and kast / Arduino. 1 for normal windows and linux. 11 for macosx.
+int TranslationConstance = 0; // 0 for no translation and kast / Arduino. 1 for PC. 11 for macosx.
 int NumKeysPerPlayer = 5;
 
 int LinksToetsen[] =  {TranslationConstance+0,TranslationConstance+5,TranslationConstance+10,TranslationConstance+15};
@@ -93,6 +93,7 @@ void setup() {
 //  size(800,600);
   fullScreen();
   noCursor();
+  frameRate(240);
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
@@ -108,13 +109,6 @@ void setup() {
     pong = minim.loadSample("data/pong.mp3");
 //    uit = minim.loadSample("data/uit.mp3");
     titlesong = minim.loadFile("data/12-dreams.mp3");
-//    out = minim.getLineOut();
-//    in = minim.getLineIn();
-//    out.addListener();
-//    in.setVolume((float)1.0e-2);
-//    out.setVolume((float)1.0e-2);
-//    ping.setVolume((float)1.0e-2);
-//    pong.setVolume((float)1.0e-2);
   }
   catch (Exception e) {
     println("No sounds found!");
@@ -137,8 +131,7 @@ void setup() {
 
   Lampjes = 0;
   ser_Build_Msg_String_And_Send(Lampjes);
-  // frameRate(100);
-  
+ 
   loadHighscores();
   saveHighscores();
 
@@ -366,7 +359,7 @@ void initGame() {
 int CalcLicht() {
   int LichtCode;
 
-  LichtCode = CyclicBuffer[(frameCounter / 2) % 80];
+  LichtCode = CyclicBuffer[(frameCounter / 4) % 80];
 //  LichtCode = int(random(1048576));
   LichtCode &= 1048575;
   return LichtCode;
@@ -391,24 +384,6 @@ void draw() {
   millis2 = millis();
   verschil = millis2 - millis1;
 //  println(verschil);
-
-//  if ( out.hasControl(Controller.VOLUME) )
-//  {
-    // map the mouse position to the range of the volume
-//    float val = map(mouseX, 0, width, 1, 0);
-    // if a volume control is not available, this will do nothing
-//    out.setVolume(5.0e-2);
-//    in.setVolume(5.0e-2);
-    // if a volume control is not available this will report zero
-//    text("The current volume is " + out.getVolume() + ".", 5, 15);
-//  }
-//  else
-//  if (out.hasControl(Controller.GAIN))
-//  {
-//    out.setGain(5.0e-1);
-//  }
-//  else
-//    Minim.error ( "Minim has no control over volume or gain!" );
 
   if (frameCounter < 10000)
     Lampjes = CalcLicht(); //int(random(1048576));
@@ -475,8 +450,6 @@ void draw() {
       }
       popMatrix();
 
-//      Lampjes = 0;
-
       for (int i = TranslationConstance; i < (NumKeys + TranslationConstance); i++) {
         Key = keysPressed[((i) % TotalNumKeys)];
         keysPressed[((i) % TotalNumKeys)] = 0;
@@ -500,7 +473,6 @@ void draw() {
       background(0);
       perFrameGame();
     }
-//    frameCounter++;
     if (frameCounter>=21000) {
       background(0);
       if (frameCounter==21000) {
@@ -548,9 +520,7 @@ void draw() {
        }
     }
   }
-//  else {
-//    frameCounter++;
-//  }
+
   if (frameCounter>=4000) {
     if (frameCounter>=10000) {
     }
@@ -607,7 +577,7 @@ void perFrameDemo1() {
   }
   else {
     Kleur--;
-    if (Kleur<0) {
+    if (Kleur<=0) {
       Kleur=0;
       Opkomst=true;
     }
@@ -645,7 +615,7 @@ void perFrameDemo2() {
   }
   else {
     Kleur--;
-    if (Kleur<0) {
+    if (Kleur<=0) {
       Kleur=0;
       Opkomst=true;
     }
@@ -684,7 +654,7 @@ void perFrameDemo3() {
   }
   else {
     Kleur--;
-    if (Kleur<0) {
+    if (Kleur<=0) {
       Kleur=0;
       Opkomst=true;
     }
@@ -730,7 +700,7 @@ void perFrameDemo4() {
   }
   else {
     Kleur--;
-    if (Kleur<0) {
+    if (Kleur<=0) {
       Kleur=0;
       Opkomst=true;
     }
@@ -812,48 +782,8 @@ class Joystick {
   }
   
   void Update() {
-//    Joystick Joys[] = {joy3,joy4,joy1,joy2};
-    
-//    Joys[0] = joy1; // Joys[PNaampje];
-//    Joys[1] = joy2;
-//    Joys[2] = joy3;
-//    Joys[3] = joy4;
 
-//    if (HumanPlayer[PNaampje]) {
-//      Joys[PNaampje].xDir = 0;
-//      Joys[PNaampje].yDir = 0;  
-//      if (stick.getButton(LinksToetsen[PNaampje]%TotalNumKeys).pressed()) {
-
-////        if (xOrient == 1)
-////          xDir = -1; // Batje goes to the left?! At least that's what you might think!
-////        else if (xOrient == -1)
-////          xDir = 1;
-//        if (xOrient != 0)
-//          xDir = -(xOrient); // Dit zou ook kunnen.
-//        if (yOrient != 0)
-//          yDir = (yOrient);
-
-//      if (stick.getButton(RechtsToetsen[PNaampje]%TotalNumKeys).pressed()) {
-
-////        if (xOrient == 1)
-////          xDir = +1; // Batje goes to the right?! At least that's what you might think!
-////        else if (xOrient == -1)
-////          xDir = -1;
-//        if (xOrient != 0)
-//          xDir = (xOrient); // Dit zou ook kunnen.
-//        if (yOrient != 0)
-//          yDir = -(yOrient);
-
-//      if (stick.getButton(PlusToetsen[PNaampje]%TotalNumKeys).pressed()) {
-//        ;;;;;
-//      if (stick.getButton(MinToetsen[PNaampje]%TotalNumKeys).pressed()) {
-//        ;;;;;
-//    }
-//    PNaampje++;
-//    PNaampje &= 3;
-// } // end of Update()
-
-  if (HumanPlayer[2]) {
+    if (HumanPlayer[2]) {
       joy1.xDir = 0;
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(LinksToetsen[2]%TotalNumKeys).pressed())) {
@@ -1052,18 +982,6 @@ class Joystick {
       joy4.y = ball[0].y;
       joy4.yDir = 0;
     }
-
-// if ((!DoubleSize)&&(HalfSize)&&(frameCounter == ffc_time)) {
-//   HalfSize = false;
-//   w = (50*abs(xOrient))+10;
-//   h = (50*abs(yOrient))+10;
-// }
-
-// if ((DoubleSize)&&(!HalfSize)&&(frameCounter == ffc_time)) {
-//   DoubleSize = false;
-//   w = (50*abs(xOrient))+10;
-//   h = (50*abs(yOrient))+10;
-// }
 
 // Joystick moves here!
 
