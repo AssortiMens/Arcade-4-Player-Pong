@@ -90,10 +90,11 @@ int NumRows = 8;
 //AudioInput in;
 
 void setup() {
-//  size(800,600);
+//  size(500,500);
   fullScreen();
   noCursor();
   frameRate(240);
+
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
@@ -223,9 +224,9 @@ void ser_Build_Msg_String_And_Send(int tCode)
 
     TestBuffer = (String.valueOf(msgchars));
     TestBuffer2 = TestBuffer.substring(0,len);
-    print(TestBuffer2); //.substring(0,len));
+//    print(TestBuffer2); //.substring(0,len));
     for (int i = 0; i < len; i++) {
-      print(msgchars[i]);
+//      print(msgchars[i]);
 
 // /*
 
@@ -469,10 +470,35 @@ void draw() {
       }
     }
 
-    if ((frameCounter>=11000)&&(frameCounter<21000)){
+    if (((frameCounter>=11000)&&(frameCounter<=21000))&&(!(GameOver))){
       background(0);
       perFrameGame();
-    }
+      GameOver = TestGameOver();
+      if (GameOver) {
+        frameCounter=21000;
+        if ((joy1.Opacity)==255) { // Opacity==255)
+          println("joy1/HumanPlayer 3 is the winner! Earlier GameOver");
+          string = Naam[2];
+        }
+        if ((joy2.Opacity)==255) { // Opacity==255)
+          println("joy2/HumanPlayer 4 is the winner! Earlier GameOver!");
+          string = Naam[3];
+        }
+        if ((joy3.Opacity)==255) { // Opacity==255)
+          println("joy3/HumanPlayer 1 is the winner! Earlier GameOver!");
+          string = Naam[0];
+        }
+        if ((joy4.Opacity)==255) { // Opacity==255)
+          println("joy4/HumanPlayer 2 is the winner! Earlier GameOver!");
+          string = Naam[1];
+        }
+      }
+      else
+        if (frameCounter == 21000) {
+          println("Time's up! We have no winner, yet!");
+          string = "Time's up! No winner!";
+        }
+      }
     if (frameCounter>=21000) {
       background(0);
       if (frameCounter==21000) {
@@ -511,10 +537,12 @@ void draw() {
          TextOrientation %= 360;
          fill(255);
          textSize(TextSize++);
-         if (TextSize > 128) {
-           TextSize = 128;
+         if (TextSize > 64) {
+           TextSize = 64;
          }
-         text("Game Over!",0,0);
+         text("Game Over!",0,-75);
+         text(string,0,0);
+         text("wins!",0,75);
          popMatrix();
 
        }
@@ -531,6 +559,8 @@ void draw() {
   ser_Build_Msg_String_And_Send(Lampjes);
   frameCounter++;
 } // End of draw()
+
+String string; // Game Over, naam van de winnaar als die er is
 
 boolean resetGame = false;
 
@@ -595,8 +625,8 @@ void perFrameDemo1() {
   rotate(radians(TextOrientation++));
   TextOrientation %= 360;
   text("AssortiMens presents",0,-50);
-  text("Pong",0,0);
-  text("© 2018 - 2021",0,50);
+  text("Four Player Pong",0,0);
+  text("© 2021",0,50);
 
   fill(255);
   text("Press a button to start",0,150);
@@ -745,6 +775,30 @@ void perFrameGame() {
   }
 }
 
+int NumOpacity = 0;
+boolean GameOver = false;
+
+boolean TestGameOver() {
+  Joystick Joys[] = {joy3,joy4,joy1,joy2};
+  boolean GameOver2;
+
+  Joys[0] = joy3;
+  Joys[1] = joy4;
+  Joys[2] = joy1;
+  Joys[3] = joy2;
+  GameOver2 = false;
+  NumOpacity = 0;
+  for (int i=0;i<4;i++) {
+    if ((Joys[i].Opacity)==0) {
+            NumOpacity++;
+            if (NumOpacity == 3) { // we have a winner!
+              GameOver2 = true;
+            }
+    }
+  }
+ return GameOver2;
+}
+
 class Joystick {
   int x,y;
   int xDir,yDir,xOrient,yOrient;
@@ -752,9 +806,11 @@ class Joystick {
   int Score;
   int dtime = 500;  // 500 frames = delta time
   int ffc_time = 0; // future frameCounter time
+  int Opacity = 255;
   boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
   boolean HalfSize=false;
   boolean DoubleSize=false;
+  boolean Charged = false;
   color Color = color(255,255,255);
   Highscore Highscore = null;
   
@@ -768,6 +824,9 @@ class Joystick {
     w = (50*abs(xOrient))+10;
     h = (50*abs(yOrient))+10;
     Score = 0;
+    Opacity = 255;
+    NumOpacity = 0;
+    GameOver = false;
     for (int i=0;i<NumBalls;i++)
       {
         collided[i] = false;
@@ -777,11 +836,14 @@ class Joystick {
     PNaampje = 2;
     HalfSize = false;
     DoubleSize = false;
+    Charged = false;
     dtime = 500;
     ffc_time = 0;
   }
-  
+ 
   void Update() {
+
+    Charged = false;
 
     if (HumanPlayer[2]) {
       joy1.xDir = 0;
@@ -826,6 +888,14 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+      }
+
+      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(VuurKnoppen[2]%TotalNumKeys).pressed())) {
+        Lampjes |= (1L<<(VuurKnoppen[2]-TranslationConstance));
+        Charged = true;
+      }
+      else if ((abs(xOrient)==1)&&(joy1==this)) {
+        Charged = false;
       }
     }
     else {
@@ -877,6 +947,14 @@ class Joystick {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
       }
+
+      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(VuurKnoppen[3]%TotalNumKeys).pressed())) {
+        Lampjes |= (1L<<(VuurKnoppen[3]-TranslationConstance));
+        Charged = true;
+      }
+      else if ((abs(yOrient)==1)&&(joy2==this)) {
+        Charged = false;
+      }
     }
     else {
       joy2.y = ball[0].y;
@@ -926,6 +1004,14 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+      }
+
+      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(VuurKnoppen[0]%TotalNumKeys).pressed())) {
+        Lampjes |= (1L<<(VuurKnoppen[0]-TranslationConstance));
+        Charged = true;
+      }
+      else if ((abs(xOrient)==1)&&(joy3==this)) {
+        Charged = false;
       }
     }
     else {
@@ -977,6 +1063,14 @@ class Joystick {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
       }
+
+      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(VuurKnoppen[1]%TotalNumKeys).pressed())) {
+        Lampjes |= (1L<<(VuurKnoppen[1]-TranslationConstance));
+        Charged = true;
+      }
+      else if ((abs(yOrient)==1)&&(joy4==this)) {
+        Charged = false;
+      }
     }
     else {
       joy4.y = ball[0].y;
@@ -1012,7 +1106,7 @@ class Joystick {
         abs(y - ball[i].y) * 2 < (h + temp)) {
         if (!(collided[i])) {
           Score++;
-          ball[i].Color = Color;
+//          ball[i].Color = Color;
           if (abs(yOrient) == 1) {
             ball[i].xDir = -ball[i].xDir;
           }
@@ -1021,6 +1115,34 @@ class Joystick {
           }
           ping.trigger();
           collided[i] = true;
+          if (ball[i].Loaded) {
+            ball[i].Loaded = false;
+            Opacity = 0;
+            if (((ball[i].Color)&0xffffff00) == ((joy1.Color)&0xffffff00))
+              joy1.Score += 1000;
+            else
+            if (((ball[i].Color)&0xffffff00) == ((joy2.Color)&0xffffff00))
+              joy2.Score += 1000;
+            else
+            if (((ball[i].Color)&0xffffff00) == ((joy3.Color)&0xffffff00))
+              joy3.Score += 1000;
+            else
+            if (((ball[i].Color)&0xffffff00) == ((joy4.Color)&0xffffff00))
+              joy4.Score += 1000;
+          }
+          else {
+            if (Opacity != 0) {
+              Opacity = 255;
+            }
+          }
+          if (Charged) {
+            ball[i].Loaded = ((ball[i].Loaded)?(false):(true));
+            Score += 10;
+          }
+          else {
+            ball[i].Loaded = false;
+          }
+          ball[i].Color = Color;
         }
       }
       else {
@@ -1031,8 +1153,18 @@ class Joystick {
 
   void Display() {
     rectMode(CENTER);
-    fill(Color);
+    stroke(Color,(Opacity==0)?(0):(160));
+    strokeWeight(2);
+    strokeJoin(BEVEL); // BEVEL, MITER, ROUND
+    fill(Color,(Opacity==0)?(0):(255));
     rect(x,y,w,h);
+
+    if (Charged) {
+      stroke(Color,255);
+      strokeWeight(2);
+      noFill();
+      ellipse(x,y,(w>h)?(w+5):(h+5),(w>h)?(w+5):(h+5));
+    }
 
     pushMatrix();
     translate(((width/2) - (((width-30)/2) * yOrient)),((height/2) - (((height-30)/2) * xOrient)));
@@ -1056,7 +1188,9 @@ class Ball {
   int x,y,xSpeed,ySpeed;
   int xDir,yDir;
   int r;
+  int CorIndex = 0;
   color Color = color(255,255,255);
+  boolean Loaded = false;
   
   Ball(int tx, int ty, int txSpeed, int tySpeed, int txDir, int tyDir, color tColor) {
     x = tx;
@@ -1066,7 +1200,9 @@ class Ball {
     xDir = txDir;
     yDir = tyDir;
     r = 5;
+    Loaded = false;
     Color = tColor;
+    CorIndex = 0;
   }
   
   void Update() {
@@ -1138,11 +1274,27 @@ class Ball {
   
   void Display() {
     rectMode(CENTER);
+//    fill(Color);
+//    rect(x,y,2*r,2*r);
+
+    if (Loaded) {
+      stroke(CorArray[CorIndex] * r); // pen color is grey / monochrome
+      noFill();
+      strokeWeight(r);
+      ellipse(x,y,CorArray[CorIndex]*r,CorArray[CorIndex]*r); // rect?!
+    }
+
+    noStroke();
     fill(Color);
-    rect(x,y,2*r,2*r);
+    ellipse(x,y,2*r,2*r); // rect?!
+
+    CorIndex++;
+    CorIndex %= 24;
   }
 
 }
+
+int CorArray[] = {16,15,14,13,12,11,10,9,8,7,6,5,4,5,6,7,8,9,10,11,12,13,14,15};
 
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
 String NaamLijst[] = {"William S.","Bas ______","_Arjan ___","_Edwin ___","Michel ___","_J@nru ___","Henry ____","Willeke __"};
