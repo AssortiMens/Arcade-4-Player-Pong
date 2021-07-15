@@ -248,6 +248,7 @@ void loadHighscores() {
         TableRow row = table.getRow(i);
         NaamLijst[i] = row.getString("name");
         ScoreLijst[i] = row.getInt("score");
+        CrownLijst[i] = row.getString("crown");
       }
     }
     else {
@@ -269,6 +270,7 @@ void saveHighscores() {
         TableRow row = table.getRow(i);
         row.setString("name", NaamLijst[i]);
         row.setInt("score", ScoreLijst[i]);
+        row.setString("crown",CrownLijst[i]);
       }
       saveTable(table, "data/highscores.csv");
     }
@@ -479,33 +481,41 @@ void draw() {
         if ((joy1.Opacity)==255) { // Opacity==255)
           println("joy1/HumanPlayer 3 is the winner! Earlier GameOver");
           string = Naam[2];
+          joy1.Crown = true;
         }
         if ((joy2.Opacity)==255) { // Opacity==255)
           println("joy2/HumanPlayer 4 is the winner! Earlier GameOver!");
           string = Naam[3];
+          joy2.Crown = true;
         }
         if ((joy3.Opacity)==255) { // Opacity==255)
           println("joy3/HumanPlayer 1 is the winner! Earlier GameOver!");
           string = Naam[0];
+          joy3.Crown = true;
         }
         if ((joy4.Opacity)==255) { // Opacity==255)
           println("joy4/HumanPlayer 2 is the winner! Earlier GameOver!");
           string = Naam[1];
+          joy4.Crown = true;
         }
       }
       else
         if (frameCounter == 21000) {
           println("Time's up! We have no winner, yet!");
           string = "Time's up! Nobody";
+          joy1.Crown = false;
+          joy2.Crown = false;
+          joy3.Crown = false;
+          joy4.Crown = false;
         }
       }
     if (frameCounter>=21000) {
       background(0);
       if (frameCounter==21000) {
-        joy3.Highscore = new Highscore(joy3.Score,0);
-        joy4.Highscore = new Highscore(joy4.Score,1);
-        joy1.Highscore = new Highscore(joy1.Score,2);
-        joy2.Highscore = new Highscore(joy2.Score,3);
+        joy3.Highscore = new Highscore(joy3.Score,0,joy3.Crown);
+        joy4.Highscore = new Highscore(joy4.Score,1,joy4.Crown);
+        joy1.Highscore = new Highscore(joy1.Score,2,joy1.Crown);
+        joy2.Highscore = new Highscore(joy2.Score,3,joy2.Crown);
        }
       if (frameCounter>=22000) {
 
@@ -710,6 +720,8 @@ void perFrameDemo3() {
     text(NaamLijst[i],-90,(30*i)-130);
     textAlign(RIGHT,CENTER);
     text(ScoreLijst[i],120,(30*i)-130);
+    textAlign(CENTER,CENTER);
+    text(CrownLijst[i],140,(30*i)-130);
   }
   fill(255);
   textAlign(CENTER,CENTER);
@@ -811,6 +823,7 @@ class Joystick {
   boolean HalfSize=false;
   boolean DoubleSize=false;
   boolean Charged = false;
+  boolean Crown = false;
   color Color = color(255,255,255);
   Highscore Highscore = null;
   
@@ -839,6 +852,7 @@ class Joystick {
     Charged = false;
     dtime = 500;
     ffc_time = 0;
+    Crown = false;
   }
  
   void Update() {
@@ -1296,6 +1310,7 @@ class Ball {
 
 int CorArray[] = {16,15,14,13,12,11,10,9,8,7,6,5,4,5,6,7,8,9,10,11,12,13,14,15};
 
+String CrownLijst[] = {" "," "," "," "," "," "," "," "};
 int ScoreLijst[] = {100,90,80,70,60,50,40,30};
 String NaamLijst[] = {"William S.","Bas ______","_Arjan ___","_Edwin ___","Michel ___","_J@nru ___","Henry ____","Willeke __"};
 String Order[] = {"1. ","2. ","3. ","4. ","5. ","6. ","7. ","8. "};
@@ -1321,16 +1336,17 @@ class Highscore {
   int KarCount = 64;
   char Cursor = '_';
   char chars[] = {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '};
-
+  boolean Crown = false;
   boolean RepKey[] = {false,false,false,false,false};
   
-  Highscore(int tScore, int tplayerX) {
+  Highscore(int tScore, int tplayerX, boolean tCrown) {
 
    Score = tScore;
    playerX = tplayerX;
    CursorX = 0;
    CursorY = 0;
    KarCount = 0;
+   Crown = tCrown;
    Cursor = KarakterSet[KarCount];
 
    for (int i=0;i<NumKeysPerPlayer;i++) {
@@ -1363,9 +1379,11 @@ class Highscore {
     for (int i=0;i<8;i++) {
       if (Score > ScoreLijst[i]) {
         for(int j=6;j>=i;j--) {
+          CrownLijst[j+1]=CrownLijst[j];
           ScoreLijst[j+1]=ScoreLijst[j];
           NaamLijst[j+1]=NaamLijst[j];
         }
+        CrownLijst[i]=((Crown)?"*":" ");
         ScoreLijst[i]=Score;
         NaamLijst[i]=Naam[playerX];
         CursorY = i;
@@ -1403,6 +1421,7 @@ class Highscore {
     textAlign(RIGHT,CENTER);
     text(ScoreLijst[i],120,20*i);
     textAlign(CENTER,CENTER);
+    text(CrownLijst[i],140,20*i);
     popMatrix();
   }
  }

@@ -1,9 +1,9 @@
-name,score
-"Player 1  ",100
-"Player 2  ",90
-"Player 3  ",80
-"Player 4  ",70
-"Player 1  ",60
-"Player 2  ",50
-"Player 3  ",40
-"Player 4  ",30
+name,score,crown
+"Player 1  ",100," "
+"Player 2  ",90," "
+"Player 3  ",80," "
+"Player 4  ",70," "
+"Player 1  ",60," "
+"Player 2  ",50," "
+"Player 3  ",40," "
+"Player 4  ",30," "
