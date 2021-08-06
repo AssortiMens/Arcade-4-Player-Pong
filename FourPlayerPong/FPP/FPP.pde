@@ -570,7 +570,7 @@ void draw() {
   frameCounter++;
 } // End of draw()
 
-String string; // Game Over, naam van de winnaar als die er is
+String string = ""; // Game Over, naam van de winnaar als die er is
 
 boolean resetGame = false;
 
@@ -1129,33 +1129,34 @@ class Joystick {
           }
           ping.trigger();
           collided[i] = true;
-          if (ball[i].Loaded) {
+          if ((ball[i].Loaded)&&(!Charged)) {
             ball[i].Loaded = false;
-            Opacity = 0;
-            if (((ball[i].Color)&0xffffff00) == ((joy1.Color)&0xffffff00))
-              joy1.Score += 1000;
+//            Opacity = 0; // explosie, game over voor deze speler!
+            if ((Opacity==255)&&(ball[i].Color == joy1.Color))
+              joy1.Score += 100000;
             else
-            if (((ball[i].Color)&0xffffff00) == ((joy2.Color)&0xffffff00))
-              joy2.Score += 1000;
+            if ((Opacity==255)&&(ball[i].Color == joy2.Color))
+              joy2.Score += 100000;
             else
-            if (((ball[i].Color)&0xffffff00) == ((joy3.Color)&0xffffff00))
-              joy3.Score += 1000;
+            if ((Opacity==255)&&(ball[i].Color == joy3.Color))
+              joy3.Score += 100000;
             else
-            if (((ball[i].Color)&0xffffff00) == ((joy4.Color)&0xffffff00))
-              joy4.Score += 1000;
+            if ((Opacity==255)&&(ball[i].Color == joy4.Color))
+              joy4.Score += 100000;
+            Opacity = 0; // explosie, game over voor deze speler!
           }
-          else {
-            if (Opacity != 0) {
-              Opacity = 255;
-            }
-          }
+//          else {
+//            if (Opacity != 0) {
+//              Opacity = 255;
+//            }
+//          }
           if (Charged) {
             ball[i].Loaded = ((ball[i].Loaded)?(false):(true));
             Score += 10;
           }
-          else {
-            ball[i].Loaded = false;
-          }
+//          else {
+//            ball[i].Loaded = false;
+//          }
           ball[i].Color = Color;
         }
       }
