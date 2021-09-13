@@ -19,7 +19,7 @@ import processing.serial.*;
 Serial serial;
 Minim minim;
 
-int Lampjes;
+int Lampjes = 0;
 
 AudioPlayer titlesong;
 AudioSample ping;
@@ -53,7 +53,7 @@ int NumKeysPerPlayer = 5;
 int LinksToetsen[] =  {TranslationConstance+0,TranslationConstance+5,TranslationConstance+10,TranslationConstance+15};
 int VuurKnoppen[] =   {TranslationConstance+1,TranslationConstance+6,TranslationConstance+11,TranslationConstance+16};
 int RechtsToetsen[] = {TranslationConstance+2,TranslationConstance+7,TranslationConstance+12,TranslationConstance+17};
-int PlusToetsen[] =   {TranslationConstance+3,TranslationConstance+8,TranslationConstance+13,TranslationConstance+18};
+int PlusToetsen[] =   {TranslationConstance+3,TranslationConstance+(int)8,TranslationConstance+13,TranslationConstance+18};
 int MinToetsen[] =    {TranslationConstance+4,TranslationConstance+9,TranslationConstance+14,TranslationConstance+19};
 
 int Player;
@@ -472,7 +472,7 @@ void draw() {
       }
     }
 
-    if (((frameCounter>=11000)&&(frameCounter<=21000))&&(!(GameOver))){
+    if (((frameCounter>=11000)&&(frameCounter<=21000))&&(!(GameOver))) {
       background(0);
       perFrameGame();
       GameOver = TestGameOver();
@@ -499,7 +499,7 @@ void draw() {
           joy4.Crown = true;
         }
       }
-      else
+      else {
         if (frameCounter == 21000) {
           println("Time's up! We have no winner, yet!");
           string = "Time's up! Nobody";
@@ -509,6 +509,8 @@ void draw() {
           joy4.Crown = false;
         }
       }
+    }
+    
     if (frameCounter>=21000) {
       background(0);
       if (frameCounter==21000) {
@@ -776,10 +778,14 @@ void perFrameGame() {
     ball[i].Display();
   }
 
-  joy1.Update();
-  joy2.Update();
-  joy3.Update();
-  joy4.Update();
+  if (joy1.Opacity==255)
+    joy1.Update();
+  if (joy2.Opacity==255)
+    joy2.Update();
+  if (joy3.Opacity==255)
+    joy3.Update();
+  if (joy4.Opacity==255)
+    joy4.Update();
   
   for (int j=0;j<NumBalls;j++)
   {
@@ -872,8 +878,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[2]-TranslationConstance));
       }
 
-      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(PlusToetsen[2]%TotalNumKeys).pressed())) {
-        Lampjes |= (1L<<(PlusToetsen[2]-TranslationConstance));
+      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton((int)(PlusToetsen[2]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(int)(PlusToetsen[2]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -930,8 +936,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[3]-TranslationConstance));
       }
 
-      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(PlusToetsen[3]%TotalNumKeys).pressed())) {
-        Lampjes |= (1L<<(PlusToetsen[3]-TranslationConstance));
+      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton((int)(PlusToetsen[3]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(int)(PlusToetsen[3]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -988,8 +994,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[0]-TranslationConstance));
       }
 
-      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(PlusToetsen[0]%TotalNumKeys).pressed())) {
-        Lampjes |= (1L<<(PlusToetsen[0]-TranslationConstance));
+      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton((int)(PlusToetsen[0]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(int)(PlusToetsen[0]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -1046,8 +1052,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[1]-TranslationConstance));
       }
 
-      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(PlusToetsen[1]%TotalNumKeys).pressed())) {
-        Lampjes |= (1L<<(PlusToetsen[1]-TranslationConstance));
+      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton((int)(PlusToetsen[1]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(int)(PlusToetsen[1]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -1232,19 +1238,23 @@ class Ball {
       if (x > (width-r))
         x = (width-r);
       if (Color == joy1.Color) {
-        joy1.Score += 100;
+        if (joy1.Opacity==255)
+          joy1.Score += 100;
       }
       else
       if (Color == joy2.Color) {
-        joy2.Score += 100;
+        if (joy2.Opacity==255)
+          joy2.Score += 100;
       }
       else
       if (Color == joy3.Color) {
-        joy3.Score += 100;
+        if (joy3.Opacity==255)
+          joy3.Score += 100;
       }
       else
       if (Color == joy4.Color) {
-        joy4.Score += 100;
+        if (joy4.Opacity==255)
+          joy4.Score += 100;
       }
       else
       {
@@ -1263,19 +1273,23 @@ class Ball {
       if (y > (height-r))
         y = (height-r);
       if (Color == joy1.Color) {
-        joy1.Score += 100;
+        if (joy1.Opacity==255)
+          joy1.Score += 100;
       }
       else
       if (Color == joy2.Color) {
-        joy2.Score += 100;
+        if (joy2.Opacity==255)
+          joy2.Score += 100;
       }
       else
       if (Color == joy3.Color) {
-        joy3.Score += 100;
+        if (joy3.Opacity==255)
+          joy3.Score += 100;
       }
       else
       if (Color == joy4.Color) {
-        joy4.Score += 100;
+        if (joy4.Opacity==255)
+          joy4.Score += 100;
       }
       else
       {
