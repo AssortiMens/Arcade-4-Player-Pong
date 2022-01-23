@@ -7,7 +7,7 @@
 /*          Bas  ......          */
 /*        Arjan  ........        */
 /*                               */
-/*   AssortiMens (C) 2018-2021   */
+/*   AssortiMens (C) 2018-2022   */
 /*********************************/
 /*          Kast-Versie          */
 /*********************************/
@@ -93,7 +93,7 @@ void setup() {
 //  size(500,500);
   fullScreen();
   noCursor();
-  frameRate(240);
+  frameRate(100);
 
   control = ControlIO.getInstance(this);
   try {
@@ -521,10 +521,10 @@ void draw() {
        }
       if (frameCounter>=22000) {
 
-        joy3.Highscore.Display();    // Magenta
-        joy4.Highscore.Display();    // Red
-        joy2.Highscore.Display();    // Green
-        joy1.Highscore.Display();    // Blue
+        joy1.Highscore.Display(); //joy3.Highscore.Display();    // Magenta
+        joy2.Highscore.Display(); //joy4.Highscore.Display();    // Red
+        joy4.Highscore.Display(); //joy2.Highscore.Display();    // Green
+        joy3.Highscore.Display(); //joy1.Highscore.Display();    // Blue
 
         joy3.Highscore.Update();
         joy4.Highscore.Update();
@@ -638,7 +638,7 @@ void perFrameDemo1() {
   TextOrientation %= 360;
   text("AssortiMens presents",0,-50);
   text("Four Player Pong",0,0);
-  text("© 2021",0,50);
+  text("© 2022",0,50);
 
   fill(255);
   text("Press a button to start",0,150);
@@ -793,8 +793,8 @@ void perFrameGame() {
   }
 }
 
-int NumOpacity = 0;
-boolean GameOver = false;
+int NumOpacity = 0; // There can only be 1, it's global and static.
+boolean GameOver = false; // There can only be 1, it's global and static.
 
 boolean TestGameOver() {
   Joystick Joys[] = {joy3,joy4,joy1,joy2};
@@ -844,15 +844,15 @@ class Joystick {
     h = (50*abs(yOrient))+10;
     Score = 0;
     Opacity = 255;
-    NumOpacity = 0;
-    GameOver = false;
+    NumOpacity = 0; // warning, this one is global and static and there's only 1
+    GameOver = false; // warning, this one is global and static and there's only 1
     for (int i=0;i<NumBalls;i++)
       {
         collided[i] = false;
       }
     Color = tColor;
     Highscore = null;
-    PNaampje = 2;
+    PNaampje = 2; // warning, this one is global and static and there's only 1
     HalfSize = false;
     DoubleSize = false;
     Charged = false;
@@ -889,6 +889,7 @@ class Joystick {
           }
         }
       }
+
       if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter == ffc_time))) {
         DoubleSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
@@ -905,6 +906,7 @@ class Joystick {
           }
         }
       }
+
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
@@ -914,9 +916,9 @@ class Joystick {
         Lampjes |= (1L<<(VuurKnoppen[2]-TranslationConstance));
         Charged = true;
       }
-      else if ((abs(xOrient)==1)&&(joy1==this)) {
-        Charged = false;
-      }
+//      else if ((abs(xOrient)==1)&&(joy1==this)) {
+//        Charged = false;
+//      }
     }
     else {
       joy1.x = ball[0].x;
@@ -947,6 +949,7 @@ class Joystick {
           }
         }
       }
+      
       if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
@@ -963,6 +966,7 @@ class Joystick {
           }
         }
       }
+
       if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
@@ -972,9 +976,9 @@ class Joystick {
         Lampjes |= (1L<<(VuurKnoppen[3]-TranslationConstance));
         Charged = true;
       }
-      else if ((abs(yOrient)==1)&&(joy2==this)) {
-        Charged = false;
-      }
+//      else if ((abs(yOrient)==1)&&(joy2==this)) {
+//        Charged = false;
+//      }
     }
     else {
       joy2.y = ball[0].y;
@@ -1005,6 +1009,7 @@ class Joystick {
           }
         }
       }
+
       if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
@@ -1021,6 +1026,7 @@ class Joystick {
           }
         }
       }
+
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
@@ -1030,9 +1036,9 @@ class Joystick {
         Lampjes |= (1L<<(VuurKnoppen[0]-TranslationConstance));
         Charged = true;
       }
-      else if ((abs(xOrient)==1)&&(joy3==this)) {
-        Charged = false;
-      }
+//      else if ((abs(xOrient)==1)&&(joy3==this)) {
+//        Charged = false;
+//      }
     }
     else {
       joy3.x = ball[0].x;
@@ -1063,6 +1069,7 @@ class Joystick {
           }
         }
       }
+
       if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
@@ -1079,6 +1086,7 @@ class Joystick {
           }
         }
       }
+
       if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
@@ -1088,9 +1096,9 @@ class Joystick {
         Lampjes |= (1L<<(VuurKnoppen[1]-TranslationConstance));
         Charged = true;
       }
-      else if ((abs(yOrient)==1)&&(joy4==this)) {
-        Charged = false;
-      }
+//      else if ((abs(yOrient)==1)&&(joy4==this)) {
+//        Charged = false;
+//      }
     }
     else {
       joy4.y = ball[0].y;
@@ -1203,7 +1211,7 @@ class Joystick {
   
 }
 
-int PNaampje = 2;
+int PNaampje = 2; // There can only be 1 and this is it. It's global and static also.
 
 class Ball {
   int x,y,xSpeed,ySpeed;
