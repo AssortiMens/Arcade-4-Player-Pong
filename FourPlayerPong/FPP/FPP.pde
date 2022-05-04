@@ -561,15 +561,16 @@ void draw() {
     }
   }
 
+  ser_Build_Msg_String_And_Send(Lampjes);
+
+  frameCounter++;
+  
   if (frameCounter>=4000) {
     if (frameCounter>=10000) {
     }
     else
       frameCounter=0;
   }
-
-  ser_Build_Msg_String_And_Send(Lampjes);
-  frameCounter++;
 } // End of draw()
 
 String string = ""; // Game Over, naam van de winnaar als die er is
@@ -619,7 +620,7 @@ void perFrameDemo1() {
   }
   else {
     Kleur--;
-    if (Kleur<=0) {
+    if (Kleur<0) {
       Kleur=0;
       Opkomst=true;
     }
@@ -657,7 +658,7 @@ void perFrameDemo2() {
   }
   else {
     Kleur--;
-    if (Kleur<=0) {
+    if (Kleur<0) {
       Kleur=0;
       Opkomst=true;
     }
@@ -696,7 +697,7 @@ void perFrameDemo3() {
   }
   else {
     Kleur--;
-    if (Kleur<=0) {
+    if (Kleur<0) {
       Kleur=0;
       Opkomst=true;
     }
@@ -744,7 +745,7 @@ void perFrameDemo4() {
   }
   else {
     Kleur--;
-    if (Kleur<=0) {
+    if (Kleur<0) {
       Kleur=0;
       Opkomst=true;
     }
