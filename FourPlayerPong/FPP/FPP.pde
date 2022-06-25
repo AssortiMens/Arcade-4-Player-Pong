@@ -40,8 +40,8 @@ Joystick joy4 = null;
 
 int joySpeed = 10;
 
-int NumBalls = 30;
-Ball ball[] = {null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null};
+int NumBalls = 50;
+Ball ball[] = {null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null};
 
 int ballSpeed = 10;
 
@@ -580,11 +580,10 @@ boolean resetGame = false;
 void TestToResetGame() {
   if (resetGame == true)
    {
-    ButtonPressed();
-    while(buttonPressed == true)
-    {
+    do {
       ButtonPressed();
     }
+    while(buttonPressed == true);
 
     saveHighscores();
 
@@ -826,7 +825,7 @@ class Joystick {
   int dtime = 500;  // 500 frames = delta time
   int ffc_time = 0; // future frameCounter time
   int Opacity = 255;
-  boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
+  boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
   boolean HalfSize=false;
   boolean DoubleSize=false;
   boolean Charged = false;
@@ -1138,9 +1137,29 @@ class Joystick {
 //          ball[i].Color = Color;
           if (abs(yOrient) == 1) {
             ball[i].xDir = -ball[i].xDir;
+            ball[i].xSpeed = int(random(ballSpeed))+1;
+
+            int dy = abs(y - ball[i].y);
+            if ((y<ball[i].y) && (ball[i].yDir<0)) {
+              ball[i].yDir = -ball[i].yDir;
+            }
+            if ((y>ball[i].y) && (ball[i].yDir>0)) {
+              ball[i].yDir = -ball[i].yDir;
+            }
+            ball[i].ySpeed = (int((float((dy)) / float(h/2)) * float(ballSpeed)) % ballSpeed) + 1; //can be 0! int(random(ballSpeed))+1;
           }
           if (abs(xOrient) == 1) {
             ball[i].yDir = -ball[i].yDir;
+            ball[i].ySpeed = int(random(ballSpeed))+1;
+            
+            int dx = abs(x - ball[i].x);
+            if ((x<ball[i].x) && (ball[i].xDir<0)) {
+              ball[i].xDir = -ball[i].xDir;
+            }
+            if ((x>ball[i].x) && (ball[i].xDir>0)) {
+              ball[i].xDir = -ball[i].xDir;
+            }
+            ball[i].xSpeed = (int((float((dx)) / float(w/2)) * float(ballSpeed)) % ballSpeed) + 1; //can be 0! int(random(ballSpeed))+1;
           }
           ping.trigger();
           collided[i] = true;
