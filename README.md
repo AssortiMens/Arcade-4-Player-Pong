@@ -1,4 +1,6 @@
-# Arcade-4-Player-Pong
+## Arcade-4-Player-Pong
+
+![Pong](20230208-Pong.jpg)
 
 This is a first attempt to whatever software I am publishing.
 
