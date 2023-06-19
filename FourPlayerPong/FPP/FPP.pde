@@ -3,11 +3,11 @@
 /*                               */
 /*      Geprogrammeerd door      */
 /*                               */
-/*         William  Senn         */
-/*          Bas  ......          */
-/*        Arjan  ........        */
 /*                               */
-/*   AssortiMens (C) 2018-2022   */
+/*         William  Senn         */
+/*                               */
+/*                               */
+/*   (C) 2018-2023 AssortiMens   */
 /*********************************/
 /*          Kast-Versie          */
 /*********************************/
@@ -120,7 +120,7 @@ void setup() {
 
   try {
     printArray(Serial.list());
-    serial = new Serial(this, Serial.list()[1], 9600);
+    serial = new Serial(this, Serial.list()[1], 115200);
     serial.bufferUntil('\0');
   }
   catch (Exception e) {
@@ -475,6 +475,7 @@ void draw() {
     if (((frameCounter>=11000)&&(frameCounter<=21000))&&(!(GameOver))) {
       background(0);
       perFrameGame();
+      DisplayCountdown(21000 - frameCounter);
       GameOver = TestGameOver();
       if (GameOver) {
         frameCounter=21000;
@@ -526,6 +527,8 @@ void draw() {
         joy4.Highscore.Display(); //joy2.Highscore.Display();    // Green
         joy3.Highscore.Display(); //joy1.Highscore.Display();    // Blue
 
+        DisplayCountdown(32000 - frameCounter);
+
         joy3.Highscore.Update();
         joy4.Highscore.Update();
         joy1.Highscore.Update();
@@ -572,6 +575,20 @@ void draw() {
       frameCounter=0;
   }
 } // End of draw()
+
+void DisplayCountdown(int CountDown)
+{
+  pushMatrix();
+  translate(width/2,height/2);
+  rotate(radians(TextOrientation));
+  TextOrientation++;
+  TextOrientation %= 360;
+  textAlign(CENTER,CENTER);
+  textSize(20);
+  fill(255);
+  text(CountDown,0,0);
+  popMatrix();
+}
 
 String string = ""; // Game Over, naam van de winnaar als die er is
 
@@ -638,7 +655,7 @@ void perFrameDemo1() {
   TextOrientation %= 360;
   text("AssortiMens presents",0,-50);
   text("Four Player Pong",0,0);
-  text("© 2022",0,50);
+  text("© 2018-2023",0,50);
 
   fill(255);
   text("Press a button to start",0,150);
@@ -1143,9 +1160,10 @@ class Joystick {
             if ((y<ball[i].y) && (ball[i].yDir<0)) {
               ball[i].yDir = -ball[i].yDir;
             }
+            else {
             if ((y>ball[i].y) && (ball[i].yDir>0)) {
               ball[i].yDir = -ball[i].yDir;
-            }
+            }}
             ball[i].ySpeed = (int((float((dy)) / float(h/2)) * float(ballSpeed)) % ballSpeed) + 1; //can be 0! int(random(ballSpeed))+1;
           }
           if (abs(xOrient) == 1) {
@@ -1156,9 +1174,10 @@ class Joystick {
             if ((x<ball[i].x) && (ball[i].xDir<0)) {
               ball[i].xDir = -ball[i].xDir;
             }
+            else {
             if ((x>ball[i].x) && (ball[i].xDir>0)) {
               ball[i].xDir = -ball[i].xDir;
-            }
+            }}
             ball[i].xSpeed = (int((float((dx)) / float(w/2)) * float(ballSpeed)) % ballSpeed) + 1; //can be 0! int(random(ballSpeed))+1;
           }
           ping.trigger();
@@ -1328,6 +1347,8 @@ class Ball {
       }
     }
   }
+
+  int HAngle = 0;
   
   void Display() {
     rectMode(CENTER);
@@ -1338,12 +1359,15 @@ class Ball {
       stroke(CorArray[CorIndex] * r); // pen color is grey / monochrome
       noFill();
       strokeWeight(r);
-      ellipse(x,y,CorArray[CorIndex]*r,CorArray[CorIndex]*r); // rect?!
-    }
+      triangle(x+(cos(radians((HAngle+120)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle+120)%360))*r*CorArray[CorIndex]),x+(cos(radians(HAngle%360))*r*CorArray[CorIndex]),y+(sin(radians(HAngle%360))*r*CorArray[CorIndex]),x+(cos(radians((HAngle-120)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle-120)%360))*r*CorArray[CorIndex])); // rect?!
+      triangle(x+(cos(radians((HAngle+60)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle+60)%360))*r*CorArray[CorIndex]),x+(cos(radians((HAngle+180)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle+180)%360))*r*CorArray[CorIndex]),x+(cos(radians((HAngle-60)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle-60)%360))*r*CorArray[CorIndex])); // rect?!
+      HAngle++;
+      HAngle %= 360;
+  }
 
     noStroke();
     fill(Color);
-    ellipse(x,y,2*r,2*r); // rect?!
+    rect(x,y,2*r,2*r); // rect?!
 
     CorIndex++;
     CorIndex %= 24;
