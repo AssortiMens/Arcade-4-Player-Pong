@@ -47,7 +47,7 @@ int ballSpeed = 10;
 
 int NumKeys = 20; /* 20 voor de kast / Arduino */
 int TotalNumKeys = 120; // Normal keyboard, use 20 out of 120
-int TranslationConstance = 0; // 0 for no translation and kast / Arduino. 1 for PC. 11 for macosx.
+int TranslationConstance = 1; // 0 for no translation and kast / Arduino. 1 for PC. 11 for macosx.
 int NumKeysPerPlayer = 5;
 
 int LinksToetsen[] =  {TranslationConstance+0,TranslationConstance+5,TranslationConstance+10,TranslationConstance+15};
@@ -98,7 +98,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice("Arduino Leonardo"); // devicename (inside double-quotes!) or device number (without the double-quotes!) here.
+    stick = control.getDevice("Keyboard"); // devicename (inside double-quotes!) or device number (without the double-quotes!) here.
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
@@ -116,11 +116,11 @@ void setup() {
     System.exit(0);
   }
 
-// /*
+/*
 
   try {
     printArray(Serial.list());
-    serial = new Serial(this, Serial.list()[1], 115200);
+    serial = new Serial(this, Serial.list()[1], 115200); // This should connect to the Arduino UNO for the lights!!
     serial.bufferUntil('\0');
   }
   catch (Exception e) {
@@ -228,7 +228,7 @@ void ser_Build_Msg_String_And_Send(int tCode)
     for (int i = 0; i < len; i++) {
 //      print(msgchars[i]);
 
-// /*
+/*
 
       serial.write((byte)(msgchars[i]));
 
@@ -1495,7 +1495,7 @@ class Highscore {
 
  void Update()
  {
-  int      i,j,k;
+//  int      i,j,k;
   Joystick Joys[] = {joy3,joy4,joy1,joy2};
 
   Joys[0] = joy3;
@@ -1503,7 +1503,7 @@ class Highscore {
   Joys[2] = joy1;
   Joys[3] = joy2;
   if ((CursorY < 8)&&(Joys[playerX].Highscore != null)&&(HumanPlayer[playerX] == true)) {
-   for (j=0;j<NumKeysPerPlayer;j++)
+   for (int j=0;j<NumKeysPerPlayer;j++)
     {
      RepKey[j] = XRepKeys[((playerX * NumKeysPerPlayer) + j)];
     }
@@ -1517,7 +1517,7 @@ class Highscore {
      {
        Lampjes |= (1L<<(PlusToetsen[playerX]-TranslationConstance));
        if (!(RepKey[3])) {
-         for (i=0;i<78;i++) {
+         for (int i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
@@ -1546,7 +1546,7 @@ class Highscore {
      {
        Lampjes |= (1L<<(MinToetsen[playerX]-TranslationConstance));
        if (!(RepKey[4])) {
-         for (i=0;i<78;i++) {
+         for (int i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
@@ -1585,13 +1585,12 @@ class Highscore {
 
          Cursor = chars[CursorX];
          
-         for (i=0;i<78;i++) {
+         for (int i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
            }
          }
-         
          RepKey[0] = true;
        }
      }
@@ -1614,13 +1613,12 @@ class Highscore {
 
          Cursor = chars[CursorX];
 
-         for (i=0;i<78;i++) {
+         for (int i=0;i<78;i++) {
            if (Cursor == KarakterSet[i]) {
              KarCount = i;
              continue;
            }
          }
-         
          RepKey[2] = true;
        }
      }
@@ -1633,19 +1631,11 @@ class Highscore {
      {
        Lampjes |= (1L<<(VuurKnoppen[playerX]-TranslationConstance));
        if (!(RepKey[1])) {
-         for (i=(0+TranslationConstance);i<(NumKeys+TranslationConstance);i++) {
-           keysPressed[i]=0;
-          }
+         for (int i=(0+TranslationConstance);i<(NumKeys+TranslationConstance);i++) {
+           keysPressed[i] = 0;
+         }
          buttonPressed = false;
          CollectedFireButtons[playerX] = HumanPlayer[playerX];  // true;
-         NumCollectedFireButtons = 0;
-
-         for (j=0;j<4;j++) {
-           NumCollectedFireButtons = ((CollectedFireButtons[j])?(NumCollectedFireButtons + 1):(NumCollectedFireButtons));
-          }
-         if (NumCollectedFireButtons == NumHumanPlayers) {
-           resetGame = true;
-          }
          RepKey[1] = true;
        }
      }
@@ -1661,11 +1651,34 @@ class Highscore {
    chars[CursorX] = Cursor;
    Naam[playerX] = String.valueOf(chars);
 
-   for (k=0;k<NumKeysPerPlayer;k++)
+   for (int k=0;k<NumKeysPerPlayer;k++)
     {
      XRepKeys[((NumKeysPerPlayer * playerX) + k)] = RepKey[k];
     }
-  }
+    
+  } // End of Update() / Main IF CursorY<8
+
+   NumCollectedFireButtons = 0;
+   for (int j=0;j<4;j++) {
+     NumCollectedFireButtons = ((CollectedFireButtons[j] == true)?(NumCollectedFireButtons + 1):(NumCollectedFireButtons));
+   }
+   
+   int Hulpje = NumHumanPlayers;
+   
+   for (int i=0;i<4;i++) {
+     if ((Joys[i] != null) && ((Joys[i].Highscore) != null)) {
+       if ((HumanPlayer[i])&&(Joys[i].Highscore.CursorY) > 7) {
+         Hulpje--;
+         if (Hulpje < 0)
+           Hulpje = 0; // NumHumanPlayers;
+       }
+     }
+   }
+
+   if ((NumCollectedFireButtons == Hulpje)) {
+     resetGame = true;
+     frameCounter = 32000; // Skip to End + saveHighscores()
+   }
 
 // Do strcpy(NaamLijst[CursorY],Naam[playerX]); here!
 //    memcpy(NaamLijst[CursorY],Naam[playerX],10);
@@ -1681,5 +1694,6 @@ class Highscore {
   else {
     NaamLijst[CursorY] = String.valueOf(chars);
   }
- }
-}
+ } // End of Update()
+
+} // End of class Highscore
