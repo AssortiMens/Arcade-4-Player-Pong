@@ -47,7 +47,7 @@ int ballSpeed = 10;
 
 int NumKeys = 20; /* 20 voor de kast / Arduino */
 int TotalNumKeys = 120; // Normal keyboard, use 20 out of 120
-int TranslationConstance = 1; // 0 for no translation and kast / Arduino. 1 for PC. 11 for macosx.
+int TranslationConstance = 0; // 0 for no translation and kast / Arduino. 1 for PC. 11 for macosx.
 int NumKeysPerPlayer = 5;
 
 int LinksToetsen[] =  {TranslationConstance+0,TranslationConstance+5,TranslationConstance+10,TranslationConstance+15};
@@ -98,7 +98,7 @@ void setup() {
   control = ControlIO.getInstance(this);
   try {
     println(control.deviceListToText(""));
-    stick = control.getDevice("Keyboard"); // devicename (inside double-quotes!) or device number (without the double-quotes!) here.
+    stick = control.getDevice("Arduino Leonardo"); // devicename (inside double-quotes!) or device number (without the double-quotes!) here.
   }
   catch (Exception e) {
     println("No Arduino found or no Toetsenbord/Keyboard configured!");
@@ -116,11 +116,11 @@ void setup() {
     System.exit(0);
   }
 
-/*
+// /*
 
   try {
     printArray(Serial.list());
-    serial = new Serial(this, Serial.list()[1], 115200); // This should connect to the Arduino UNO for the lights!!
+    serial = new Serial(this, Serial.list()[2], 115200); // This should connect to the Arduino UNO for the lights!!
     serial.bufferUntil('\0');
   }
   catch (Exception e) {
@@ -228,7 +228,7 @@ void ser_Build_Msg_String_And_Send(int tCode)
     for (int i = 0; i < len; i++) {
 //      print(msgchars[i]);
 
-/*
+// /*
 
       serial.write((byte)(msgchars[i]));
 
@@ -1394,6 +1394,7 @@ char KarakterSet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M',
 boolean Once[] = {false,false,false,false};
 boolean CollectedFireButtons[] = {false,false,false,false};
 int NumCollectedFireButtons = 0;
+int Hulpje = 0;
 
 class Highscore {
   int Score = 0;
@@ -1408,6 +1409,7 @@ class Highscore {
   
   Highscore(int tScore, int tplayerX, boolean tCrown) {
 
+   Hulpje = 0;
    Score = tScore;
    playerX = tplayerX;
    CursorX = 0;
@@ -1420,7 +1422,11 @@ class Highscore {
      RepKey[i] = XRepKeys[((NumKeysPerPlayer * playerX) + i)];
    }
    Once[playerX] = false;
+   for (int i=0;i<4;i++) {
+     CollectedFireButtons[i] = false;
+   }
    CollectedFireButtons[playerX] = false;
+   NumCollectedFireButtons = 0;
    chars = Naam[playerX].toCharArray();
    Cursor = chars[CursorX];
    for (int j=0;j<78;j++) {
@@ -1473,23 +1479,25 @@ class Highscore {
   Joys[1] = joy4;
   Joys[2] = joy1;
   Joys[3] = joy2;
-  for (i=0;i<8;i++) {
-    pushMatrix();
-    translate(((width/2)-(((width-320)/2)*(Joys[playerX].yOrient))),((height/2)-(((height-320)/2)*(Joys[playerX].xOrient))));
-    rotate(radians(PlayerAngle[playerX]));
+  if (NumCollectedFireButtons != Hulpje) {
+    for (i=0;i<8;i++) {
+      pushMatrix();
+      translate(((width/2)-(((width-320)/2)*(Joys[playerX].yOrient))),((height/2)-(((height-320)/2)*(Joys[playerX].xOrient))));
+      rotate(radians(PlayerAngle[playerX]));
 
-    fill(((HumanPlayer[playerX] == true)&&(Joys[playerX].Highscore != null)&&((CursorY) == i))?(Joys[playerX].Color):(color(255,255,255)));
+      fill(((HumanPlayer[playerX] == true)&&(Joys[playerX].Highscore != null)&&((CursorY) == i))?(Joys[playerX].Color):(color(255,255,255)));
 
-    textSize(20);
-    textAlign(LEFT,CENTER);
-    text(Order[i],-120,20*i);
-    textAlign(LEFT,CENTER);
-    text(NaamLijst[i],-90,20*i);
-    textAlign(RIGHT,CENTER);
-    text(ScoreLijst[i],120,20*i);
-    textAlign(CENTER,CENTER);
-    text(CrownLijst[i],140,20*i);
-    popMatrix();
+      textSize(20);
+      textAlign(LEFT,CENTER);
+      text(Order[i],-120,20*i);
+      textAlign(LEFT,CENTER);
+      text(NaamLijst[i],-90,20*i);
+      textAlign(RIGHT,CENTER);
+      text(ScoreLijst[i],120,20*i);
+      textAlign(CENTER,CENTER);
+      text(CrownLijst[i],140,20*i);
+      popMatrix();
+    }
   }
  }
 
@@ -1663,7 +1671,7 @@ class Highscore {
      NumCollectedFireButtons = ((CollectedFireButtons[j] == true)?(NumCollectedFireButtons + 1):(NumCollectedFireButtons));
    }
    
-   int Hulpje = NumHumanPlayers;
+   Hulpje = NumHumanPlayers;
    
    for (int i=0;i<4;i++) {
      if ((Joys[i] != null) && ((Joys[i].Highscore) != null)) {
