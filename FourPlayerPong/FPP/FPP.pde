@@ -292,6 +292,8 @@ void demoMode() {
 }
 
 void initGame() {
+  NumBalls = 50; // Force to 50 balls max
+  
   TextSize = 1;
 
   NumCollectedFireButtons = 0;
@@ -474,6 +476,9 @@ void draw() {
 
     if (((frameCounter>=11000)&&(frameCounter<=21000))&&(!(GameOver))) {
       background(0);
+      
+      NumBalls = int(((frameCounter-11000)/200)%50)+1; // Building up a level once per 200 frames => 50 balls max.
+      
       perFrameGame();
       DisplayCountdown(21000 - frameCounter);
       GameOver = TestGameOver();
@@ -750,6 +755,10 @@ void perFrameDemo3() {
 
 void perFrameDemo4() {
   background(0);
+
+//  NumBalls = 50; // Force to 50.
+//  NumBalls = int(((frameCounter-3000)/200)%50)+1; // Building up a level every 200 frames => 50 balls max.
+
   perFrameGame();
   if (Opkomst) {
     Kleur++;
