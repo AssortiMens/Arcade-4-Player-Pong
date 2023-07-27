@@ -756,7 +756,7 @@ void perFrameDemo3() {
 void perFrameDemo4() {
   background(0);
 
-//  NumBalls = 50; // Force to 50.
+//  NumBalls = 50; // Force to 50!
 //  NumBalls = int(((frameCounter-3000)/200)%50)+1; // Building up a level every 200 frames => 50 balls max.
 
   perFrameGame();
@@ -857,6 +857,7 @@ class Joystick {
   boolean Charged = false;
   boolean Crown = false;
   color Color = color(255,255,255);
+  boolean FirstTime = true;
   Highscore Highscore = null;
   
   Joystick(int tx, int ty, int txDir, int tyDir, color tColor) {
@@ -885,6 +886,7 @@ class Joystick {
     dtime = 500;
     ffc_time = 0;
     Crown = false;
+    FirstTime = true; // Explosion animation start...
   }
  
   void Update() {
@@ -1212,13 +1214,16 @@ class Joystick {
 //              Opacity = 255;
 //            }
 //          }
-          if (Charged) {
+          if ((Opacity==255)&&(Charged)) {
             ball[i].Loaded = ((ball[i].Loaded)?(false):(true));
             Score += 10;
           }
 //          else {
 //            ball[i].Loaded = false;
 //          }
+          if ((Opacity==255)&&(ball[i].Color == color(255,255,255))) {
+            Score += 1000; // White balls are worth an extra 1000 points!
+          }
           ball[i].Color = Color;
         }
       }
@@ -1234,7 +1239,25 @@ class Joystick {
     strokeWeight(2);
     strokeJoin(BEVEL); // BEVEL, MITER, ROUND
     fill(Color,(Opacity==0)?(0):(255));
-    rect(x,y,w,h);
+    if (Opacity==255) {
+      rect(x,y,w,h);
+    }
+    else {
+      if (FirstTime) {
+        w = h = 5; // ((frameCounter)%100)+1;
+        FirstTime = false;
+      }
+      strokeWeight(5);
+      if (w >= 255) {
+        w=h=255;
+        fill(Color,0);
+      }
+      else {
+        stroke(Color,255);
+        ellipse(x,y,w,h); // Radiant explosion!
+        w+=3;h+=3;
+      }
+    }
 
     if (Charged) {
       stroke(Color,255);
@@ -1372,7 +1395,7 @@ class Ball {
       triangle(x+(cos(radians((HAngle+60)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle+60)%360))*r*CorArray[CorIndex]),x+(cos(radians((HAngle+180)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle+180)%360))*r*CorArray[CorIndex]),x+(cos(radians((HAngle-60)%360))*r*CorArray[CorIndex]),y+(sin(radians((HAngle-60)%360))*r*CorArray[CorIndex])); // rect?!
       HAngle++;
       HAngle %= 360;
-  }
+    }
 
     noStroke();
     fill(Color);
