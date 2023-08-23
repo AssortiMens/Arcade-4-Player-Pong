@@ -24,7 +24,7 @@ int Lampjes = 0;
 AudioPlayer titlesong;
 AudioSample ping;
 AudioSample pong;
-// AudioSample uit;
+AudioSample explosion;
 
 ControlIO control;
 ControlDevice stick;
@@ -38,12 +38,18 @@ Joystick joy2 = null;
 Joystick joy3 = null;
 Joystick joy4 = null;
 
-int joySpeed = 10;
+int joySpeed = 10; // 10px per frame
+int joySpeedX = 0; // joySpeed*(width/height);
+int joySpeedY = 0; // joySpeed*(1);
 
 int NumBalls = 50;
-Ball ball[] = {null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null};
+Ball ball[] = {null,null,null,null,null,null,null,null,null,null,
+               null,null,null,null,null,null,null,null,null,null,
+               null,null,null,null,null,null,null,null,null,null,
+               null,null,null,null,null,null,null,null,null,null,
+               null,null,null,null,null,null,null,null,null,null};
 
-int ballSpeed = 10;
+int ballSpeed = 10; // 10px per frame
 
 int NumKeys = 20; /* 20 voor de kast / Arduino */
 int TotalNumKeys = 120; // Normal keyboard, use 20 out of 120
@@ -53,7 +59,7 @@ int NumKeysPerPlayer = 5;
 int LinksToetsen[] =  {TranslationConstance+0,TranslationConstance+5,TranslationConstance+10,TranslationConstance+15};
 int VuurKnoppen[] =   {TranslationConstance+1,TranslationConstance+6,TranslationConstance+11,TranslationConstance+16};
 int RechtsToetsen[] = {TranslationConstance+2,TranslationConstance+7,TranslationConstance+12,TranslationConstance+17};
-int PlusToetsen[] =   {TranslationConstance+3,TranslationConstance+(int)8,TranslationConstance+13,TranslationConstance+18};
+int PlusToetsen[] =   {TranslationConstance+3,TranslationConstance+8,TranslationConstance+13,TranslationConstance+18};
 int MinToetsen[] =    {TranslationConstance+4,TranslationConstance+9,TranslationConstance+14,TranslationConstance+19};
 
 int Player;
@@ -90,10 +96,16 @@ int NumRows = 8;
 //AudioInput in;
 
 void setup() {
-//  size(500,500);
+//  size(768,768);
   fullScreen();
+//  size(768,768);
   noCursor();
   frameRate(100);
+  
+  println(width,height);
+
+  joySpeedX = int(float(joySpeed)*(float(width)/float(height)));
+  joySpeedY = joySpeed*1;
 
   control = ControlIO.getInstance(this);
   try {
@@ -105,11 +117,24 @@ void setup() {
     System.exit(0);
   }
   try {
+    minim = null;
     minim = new Minim(this);
-    ping = minim.loadSample("data/ping.mp3");
-    pong = minim.loadSample("data/pong.mp3");
-//    uit = minim.loadSample("data/uit.mp3");
-    titlesong = minim.loadFile("data/12-dreams.mp3");
+    if (minim != null) {
+      ping = pong = explosion = null;
+      titlesong = null;
+      ping = minim.loadSample("data/ping.mp3");
+      pong = minim.loadSample("data/pong.mp3");
+      explosion = minim.loadSample("data/explosion.wav");
+      titlesong = minim.loadFile("data/12-dreams.mp3");
+      if ((ping == null)||(pong == null)||(explosion == null)||(titlesong == null)) {
+        println("Music / SFX failed to load!");
+        System.exit(0);
+      }
+    }
+    else {
+      println("minim == null !!");
+      System.exit(0);
+    }
   }
   catch (Exception e) {
     println("No sounds found!");
@@ -851,7 +876,11 @@ class Joystick {
   int dtime = 500;  // 500 frames = delta time
   int ffc_time = 0; // future frameCounter time
   int Opacity = 255;
-  boolean collided[]={false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
+  boolean collided[]={false,false,false,false,false,false,false,false,false,false,
+                      false,false,false,false,false,false,false,false,false,false,
+                      false,false,false,false,false,false,false,false,false,false,
+                      false,false,false,false,false,false,false,false,false,false,
+                      false,false,false,false,false,false,false,false,false,false};
   boolean HalfSize=false;
   boolean DoubleSize=false;
   boolean Charged = false;
@@ -867,8 +896,8 @@ class Joystick {
     yDir = tyDir;
     xOrient = xDir;
     yOrient = yDir;
-    w = (50*abs(xOrient))+10;
-    h = (50*abs(yOrient))+10;
+    w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+    h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
     Score = 0;
     Opacity = 255;
     NumOpacity = 0; // warning, this one is global and static and there's only 1
@@ -906,8 +935,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[2]-TranslationConstance));
       }
 
-      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton((int)(PlusToetsen[2]%TotalNumKeys)).pressed())) {
-        Lampjes |= (1L<<(int)(PlusToetsen[2]-TranslationConstance));
+      if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton((PlusToetsen[2]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(PlusToetsen[2]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -921,6 +950,8 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter == ffc_time))) {
         DoubleSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(MinToetsen[2]%TotalNumKeys).pressed())) {
@@ -929,7 +960,7 @@ class Joystick {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            w = (20*abs(xOrient))+10; // h = (20*abs(yOrient))+10;
+            w = (20*abs(xOrient))+10; w = (int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10)/2; // h = (20*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -938,6 +969,8 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(xOrient)==1)&&(joy1==this)&&(stick.getButton(VuurKnoppen[2]%TotalNumKeys).pressed())) {
@@ -966,8 +999,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[3]-TranslationConstance));
       }
 
-      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton((int)(PlusToetsen[3]%TotalNumKeys)).pressed())) {
-        Lampjes |= (1L<<(int)(PlusToetsen[3]-TranslationConstance));
+      if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton((PlusToetsen[3]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(PlusToetsen[3]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -981,6 +1014,8 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(MinToetsen[3]%TotalNumKeys).pressed())) {
@@ -989,7 +1024,7 @@ class Joystick {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            h = (20*abs(yOrient))+10; // w = (20*abs(xOrient))+10;
+            h = (20*abs(yOrient))+10; h = (int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10)/2; // w = (20*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -998,6 +1033,8 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(yOrient)==1)&&(joy2==this)&&(stick.getButton(VuurKnoppen[3]%TotalNumKeys).pressed())) {
@@ -1026,8 +1063,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[0]-TranslationConstance));
       }
 
-      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton((int)(PlusToetsen[0]%TotalNumKeys)).pressed())) {
-        Lampjes |= (1L<<(int)(PlusToetsen[0]-TranslationConstance));
+      if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton((PlusToetsen[0]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(PlusToetsen[0]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -1041,6 +1078,8 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(MinToetsen[0]%TotalNumKeys).pressed())) {
@@ -1049,7 +1088,7 @@ class Joystick {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            w = (20*abs(xOrient))+10; // h = (20*abs(yOrient))+10;
+            w = (20*abs(xOrient))+10; w = (int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10)/2; // h = (20*abs(yOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -1058,6 +1097,8 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(xOrient)==1)&&(joy3==this)&&(stick.getButton(VuurKnoppen[0]%TotalNumKeys).pressed())) {
@@ -1086,8 +1127,8 @@ class Joystick {
         Lampjes |= (1L<<(RechtsToetsen[1]-TranslationConstance));
       }
 
-      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton((int)(PlusToetsen[1]%TotalNumKeys)).pressed())) {
-        Lampjes |= (1L<<(int)(PlusToetsen[1]-TranslationConstance));
+      if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton((PlusToetsen[1]%TotalNumKeys)).pressed())) {
+        Lampjes |= (1L<<(PlusToetsen[1]-TranslationConstance));
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -1101,6 +1142,8 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(MinToetsen[1]%TotalNumKeys).pressed())) {
@@ -1109,7 +1152,7 @@ class Joystick {
           if (Score >= 30000) {
             Score += 10000;
             HalfSize = true;
-            h = (20*abs(yOrient))+10; // w = (20*abs(xOrient))+10;
+            h = (20*abs(yOrient))+10; h = (int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10)/2; // w = (20*abs(xOrient))+10;
             ffc_time = (frameCounter + dtime);
           }
         }
@@ -1118,6 +1161,8 @@ class Joystick {
       if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
       if ((abs(yOrient)==1)&&(joy4==this)&&(stick.getButton(VuurKnoppen[1]%TotalNumKeys).pressed())) {
@@ -1135,8 +1180,8 @@ class Joystick {
 
 // Joystick moves here!
 
-    x += (joySpeed * xDir);
-    y += (joySpeed * yDir);
+    x += (joySpeedX * xDir);
+    y += (joySpeedY * yDir);
     
     if ((x < (w/2)) || (x > (width-(w/2)))) {
       xDir = 0;
@@ -1208,6 +1253,7 @@ class Joystick {
             if ((Opacity==255)&&(ball[i].Color == joy4.Color))
               joy4.Score += 100000;
             Opacity = 0; // explosie, game over voor deze speler!
+            explosion.trigger();
           }
 //          else {
 //            if (Opacity != 0) {
@@ -1243,9 +1289,11 @@ class Joystick {
       rect(x,y,w,h);
     }
     else {
-      if (FirstTime) {
-        w = h = 5; // ((frameCounter)%100)+1;
+      if (FirstTime == true) {
+        w = 5; h = 5; // ((frameCounter)%100)+1;
+//        explosion.trigger();
         FirstTime = false;
+//        explosion.trigger(); // explosion sound
       }
       strokeWeight(5);
       if (w >= 255) {
