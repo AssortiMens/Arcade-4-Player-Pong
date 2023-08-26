@@ -896,7 +896,7 @@ class Joystick {
     yDir = tyDir;
     xOrient = xDir;
     yOrient = yDir;
-    w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+    w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
     h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
     Score = 0;
     Opacity = 255;
@@ -950,7 +950,7 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy1==this)&&((frameCounter == ffc_time))) {
         DoubleSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -969,7 +969,7 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy1==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -1014,7 +1014,7 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -1033,7 +1033,7 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(yOrient)==1)&&(joy2==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -1078,7 +1078,7 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -1097,7 +1097,7 @@ class Joystick {
       if ((!DoubleSize)&&(HalfSize)&&(abs(xOrient)==1)&&(joy3==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         w = (50*abs(xOrient))+10; // h = (50*abs(yOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -1142,7 +1142,7 @@ class Joystick {
       if ((!HalfSize)&&(DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
         DoubleSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -1161,7 +1161,7 @@ class Joystick {
       if ((HalfSize)&&(!DoubleSize)&&(abs(yOrient)==1)&&(joy4==this)&&(frameCounter == ffc_time)) {
         HalfSize = false;
         h = (50*abs(yOrient))+10; // w = (50*abs(xOrient))+10;
-        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+10;
+        w = (50*abs(xOrient))+10; w = int((float(width)/(2*float(joySpeedX)))*abs(xOrient))+int(float(10)*(float(width)/float(height)));
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
@@ -1210,7 +1210,7 @@ class Joystick {
 //          ball[i].Color = Color;
           if (abs(yOrient) == 1) {
             ball[i].xDir = -ball[i].xDir;
-            ball[i].xSpeed = int(random(ballSpeed))+1;
+            ball[i].xSpeed = int(random(ballSpeed))+1; ball[i].xSpeed = int(float(ball[i].xSpeed)*float(width)/float(height));
 
             int dy = abs(y - ball[i].y);
             if ((y<ball[i].y) && (ball[i].yDir<0)) {
@@ -1234,7 +1234,7 @@ class Joystick {
             if ((x>ball[i].x) && (ball[i].xDir>0)) {
               ball[i].xDir = -ball[i].xDir;
             }}
-            ball[i].xSpeed = (int((float((dx)) / float(w/2)) * float(ballSpeed)) % ballSpeed) + 1; //can be 0! int(random(ballSpeed))+1;
+            ball[i].xSpeed = (int((float((dx)) / float(w/2)) * float(ballSpeed)) % ballSpeed) + 1; ball[i].xSpeed = int(float(ball[i].xSpeed)*float(width)/float(height)); //can be 0! int(random(ballSpeed))+1;
           }
           ping.trigger();
           collided[i] = true;
@@ -1291,9 +1291,8 @@ class Joystick {
     else {
       if (FirstTime == true) {
         w = 5; h = 5; // ((frameCounter)%100)+1;
-//        explosion.trigger();
         FirstTime = false;
-//        explosion.trigger(); // explosion sound
+//        explosion.trigger(); // explosion sound has moved to update-function!
       }
       strokeWeight(5);
       if (w >= 255) {
@@ -1343,7 +1342,7 @@ class Ball {
   Ball(int tx, int ty, int txSpeed, int tySpeed, int txDir, int tyDir, color tColor) {
     x = tx;
     y = ty;
-    xSpeed = txSpeed;
+    xSpeed = int(float(txSpeed)*(float(width)/float(height)));
     ySpeed = tySpeed;
     xDir = txDir;
     yDir = tyDir;
