@@ -407,6 +407,7 @@ int CyclicBuffer[] = {1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,
 int millis1 = 0;
 int millis2 = 0;
 int verschil = 0;
+long Masks[] = {0x000fffe0,0x000ffc1f,0x000f83ff,0x00007fff};
 
 void draw() {
 /* frame tijd achterhalen */
@@ -418,8 +419,26 @@ void draw() {
   if (frameCounter < 10000)
     Lampjes = CalcLicht(); //int(random(1048576));
   else
-    Lampjes = 0;
- 
+   {
+    if ((frameCounter >= 10000) && (frameCounter < 11000))
+     {
+      Lampjes = (((((frameCounter-10000)/8)%2)==1)?(0):(-1)); // int(-1 * int(((frameCounter-10000) / 4) % 2));
+      Lampjes &= 1048575;
+      for(int s=0;s<4;s++) {
+        if (HumanPlayer[(s & 3)] == true) {
+          Lampjes &= (Masks[(s & 3)]);
+        }
+      }
+     }
+    else
+     {
+      Lampjes = 0;
+     }
+   }
+
+//  print(Lampjes); // debug
+//  print(" "); // debug
+
   if (frameCounter<1000) {
     perFrameDemo1();
   }
@@ -1286,7 +1305,8 @@ class Joystick {
     strokeJoin(BEVEL); // BEVEL, MITER, ROUND
     fill(Color,(Opacity==0)?(0):(255));
     if (Opacity==255) {
-      rect(x,y,w,h);
+//      fill(0,255,0);
+      rect(x,y,w,h); // fill(255); rect(x,y-5,w,h); fill(8); rect(x,y-10,w,h); fill(255,0,0); triangle(x-20,y-5,x-30,y-15,x-30,y+5);
     }
     else {
       if (FirstTime == true) {

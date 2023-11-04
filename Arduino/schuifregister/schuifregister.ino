@@ -1,8 +1,3 @@
-
-// This code should go into the Arduino UNO !!
-// It is supposed to steer a 24-bit shiftregister which controls the 12V LED lights by putting 3 chips of type 5821 (Serial In, Parallel Out, Buffered (!!)) in cascade on an experimental PCB
-// If compiling is unsuccessfull because it can not find SimpleMessageSystem.h , please copy the entire Arduino map into your MyDocuments map before installing the Arduino IDE (!!) and recompile
-
 #include "SimpleMessageSystem.h"
 
 //Pin connected to ST_CP of 74HC595
@@ -20,7 +15,7 @@ void setup() {
   pinMode(latchPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
-  Serial.begin(9600); // You might want to set this to 115200 instead of 9600
+  Serial.begin(9600);
 }
 
 void loop() {

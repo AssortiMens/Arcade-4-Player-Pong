@@ -3,9 +3,6 @@
 /* de toetsen van de kast */
 /* Door William Senn */
 
-// Needs ArduinoJoystickLibrary by Heironimus (Arduino Leonardo Joystick Library), try searching for it on github.com
-// If your compile was unsuccessfull, please consider moving or copying your Arduino map to your MyDocuments map BEFORE installing the Arduino IDE (!!) and recompile.
-
 #include <Joystick.h>
 
 Joystick_ Joystick;
@@ -18,6 +15,7 @@ uint32_t AlleToetsen[] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 char HexAscii[] = { '0','0','0','0','0','0','0','0','\n' };
 char FastHex[] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
 char *Ptr;
+bool nc = true;
 // Serial *serial; // = null;
 
 
@@ -35,7 +33,7 @@ char *toHexAscii(uint32_t Value)
 
 void setup()
 {
-//  Serial.begin(9600); // 9600 is default for serial debugging, which is only taking up time and space.
+//  Serial.begin(9600);
 //  while (!Serial) {
 
 //  } 
@@ -72,6 +70,9 @@ void setup()
 //      delay(1000);
 //    }
 //  }
+
+ nc = true;
+
 }
 
 void loop()
@@ -150,7 +151,7 @@ void loop()
     AlleToetsen[i] = 0L;
   }
   
-  if (Value2 != OldValue)
+  if ((Value2 == OldValue) && (nc == true))
   {
    uint32_t Value3 = Value2;
    
@@ -158,7 +159,9 @@ void loop()
    {
     Joystick.setButton(i,((Value3)>>i)&(1L));
    }
-   
+
+   nc = false;
+
 //   Ptr = toHexAscii(Value2);
 //   for (int k=0;k<9;k++)
 //    {
@@ -171,6 +174,11 @@ void loop()
 //      digitalWrite(LED_BUILTIN,LOW);
 //      delay(1);
 //    }
+  }
+ else
+  {
+    if (Value2 != OldValue)
+      nc = true;
   }
  OldValue = Value2;
 }
