@@ -1,3 +1,13 @@
+// This code should go into the Arduino UNO !!!
+
+// This Arduino should be connected to a 24 bits latched parallel out / serial in shift-register, comprised of 3 cascaded 5821 chips,
+//  of which the lower 20 bits are used to steer 20 12V led lights which preferably are located in the buttonswitches, which are read
+//  by the code in the Arduino Leonardo...
+
+// Have fun!!
+
+// William Senn.
+
 #include "SimpleMessageSystem.h"
 
 //Pin connected to ST_CP of 74HC595
@@ -15,7 +25,7 @@ void setup() {
   pinMode(latchPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200); // Set baudrate to 115200 preferably.
 }
 
 void loop() {
