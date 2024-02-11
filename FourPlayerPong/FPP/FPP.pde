@@ -96,9 +96,9 @@ int NumRows = 8;
 //AudioInput in;
 
 void setup() {
-//  size(768,768);
   fullScreen();
 //  size(768,768);
+//  size(800,600);
   noCursor();
   frameRate(100);
   
