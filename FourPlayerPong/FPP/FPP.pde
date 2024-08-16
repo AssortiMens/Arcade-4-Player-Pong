@@ -887,6 +887,8 @@ boolean TestGameOver() {
  return GameOver2;
 }
 
+boolean PFlag = false; // set to true for P(alestine) - flag
+
 class Joystick {
   int x,y;
   int xDir,yDir,xOrient,yOrient;
@@ -1305,9 +1307,11 @@ class Joystick {
     strokeJoin(BEVEL); // BEVEL, MITER, ROUND
     fill(Color,(Opacity==0)?(0):(255));
     if (Opacity==255) {
-//      fill(0,255,0);
+      if (PFlag)
+        fill(0,255,0);
       rect(x,y,w,h);
-/*
+// /*
+      if (PFlag) {
       pushMatrix();
       translate(x,y);
       rotate(radians(PlayerAngle[PNaampje&3]));
@@ -1331,6 +1335,7 @@ class Joystick {
         triangle(-(w/2)+10,0,-(w/2),-h/2,-(w/2),h/2); // -20,-5,-30,-15,-30,5); //x-20,y-5,x-30,y-15,x-30,y+5);
       }
       popMatrix();
+      }
 // */
     }
     else {
