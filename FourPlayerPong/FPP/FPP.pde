@@ -1306,7 +1306,32 @@ class Joystick {
     fill(Color,(Opacity==0)?(0):(255));
     if (Opacity==255) {
 //      fill(0,255,0);
-      rect(x,y,w,h); // fill(255); rect(x,y-5,w,h); fill(8); rect(x,y-10,w,h); fill(255,0,0); triangle(x-20,y-5,x-30,y-15,x-30,y+5);
+      rect(x,y,w,h);
+/*
+      pushMatrix();
+      translate(x,y);
+      rotate(radians(PlayerAngle[PNaampje&3]));
+      if (abs(yOrient)==1)
+       {
+         noStroke();
+         fill(255);
+         rect(0,0,h,w/3);
+         fill(0);
+         rect(0,-w/3,h,w/3);
+         fill(255,0,0);
+         triangle(-(h/2)+10,0,-h/2,(-w/2),-h/2,(w/2)); // -20,-5,-30,-15,-30,5);
+       }
+      else {
+        noStroke();
+        fill(255);
+        rect(0,0,w,h/3); // rect(x,y-5,w,h);
+        fill(0);
+        rect(0,-h/3,w,h/3); //x,y-10,w,h);
+        fill(255,0,0);
+        triangle(-(w/2)+10,0,-(w/2),-h/2,-(w/2),h/2); // -20,-5,-30,-15,-30,5); //x-20,y-5,x-30,y-15,x-30,y+5);
+      }
+      popMatrix();
+// */
     }
     else {
       if (FirstTime == true) {
