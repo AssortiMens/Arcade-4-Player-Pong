@@ -7,7 +7,7 @@
 /*         William  Senn         */
 /*                               */
 /*                               */
-/*   (C) 2018-2024 AssortiMens   */
+/*   (C) 2018-2025 AssortiMens   */
 /*********************************/
 /*          Kast-Versie          */
 /*********************************/
@@ -704,7 +704,7 @@ void perFrameDemo1() {
   TextOrientation %= 360;
   text("AssortiMens presents",0,-50);
   text("Four Player Pong",0,0);
-  text("© 2018-2024",0,50);
+  text("© 2018-2025",0,50);
 
   fill(255);
   text("Press a button to start",0,150);
