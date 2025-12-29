@@ -151,7 +151,7 @@ void setup() {
     System.exit(0);
   }
 
-// /*
+ if (stick!=null) {
 
   try {
     printArray(Serial.list());
@@ -163,7 +163,7 @@ void setup() {
     System.exit(0);
   }
 
-// */
+ }
 
   Lampjes = 0;
   ser_Build_Msg_String_And_Send(Lampjes);
@@ -263,13 +263,10 @@ void ser_Build_Msg_String_And_Send(int tCode)
     for (int i = 0; i < len; i++) {
 //      print(msgchars[i]);
 
-// /*
+     if (stick!=null)
+       serial.write((byte)(msgchars[i]));
 
-      serial.write((byte)(msgchars[i]));
-
-// */
-
-    }
+    } // end for
     OldCode = tCode;
   }
 }
@@ -323,7 +320,7 @@ void demoMode() {
   Kleur = -1;
   Opkomst = true;
 
-  frameCounter=0;
+  frameCounter = 0;
 }
 
 void initGame() {
@@ -595,8 +592,8 @@ void draw() {
 
         TestToResetGame();
 
-        if (frameCounter>=32000) {
-          frameCounter=0;
+        if (frameCounter >= 32000) {
+          frameCounter = 0;
           resetGame = true;
           
           TestToResetGame();
@@ -664,8 +661,9 @@ void TestToResetGame() {
 
     saveHighscores();
 
-    initGame();
     demoMode();
+    initGame();
+
     resetGame = false;
    }
 }
@@ -684,22 +682,60 @@ void ButtonPressed() {
     }
    }
    else // Normal standard key handle, stick = null
-   {
-    int  toets = 0;
-    char toets2 = '\0';
-    
-    if (keyPressed)
-      toets2 = key;
-    toets2 &= 0x5f; // toUpper()
-    if ((toets2 >= 'A') && (toets2 <= 'T'))
-      toets = int(toets2) - int('A') + 1;
-    else
-      toets = 0;
-    keysPressed[z] = toets;
-    if (toets > 0)
-      buttonPressed = true;
-   }
+   { // Hier binnen mag geen key interrupt optreden! Moet dus ondeelbaar zijn!
+      if (keysPressed[z] != 0)
+        buttonPressed = true;
+   } // end of standard key handle, stick == null
+  } // end of for loop
+} // end of ButtonPressed()
+
+boolean KnopjeIngedrukt = false; // keyPressed;
+
+void keyPressed() {
+  byte toets2 = 0;
+  int  toets = 0;
+
+  toets2 = (byte)key;
+  toets2 &= 0x5f; // toUpper() ??
+  if ((toets2 >= 'A') && (toets2 <= 'T'))
+    toets = ((int(toets2) - int('A')) + 1); // 1 t/m 20 ?
+  else
+    toets = 0;
+
+  if ((toets>0)) { // Als binnen deze if een key interrupt optreedt, hebben we een probleem! Moet eigenlijk ondeelbaar plaatsvinden!
+//    if (toets == (z+1))
+      keysPressed[toets-1] = toets; // store 1 t/m 20 in keysPressed array [0-19]
   }
+//  if ((!KnopjeIngedrukt)||(toets==0))
+//    keysPressed[z] = 0; // clear key
+//  if (toets > 0)
+//    buttonPressed = true;
+  if (toets>0)
+    KnopjeIngedrukt = true; // keyPressed;
+}
+
+void keyReleased()
+{
+  byte toets2 = 0;
+  int  toets = 0;
+
+  toets2 = (byte)key;
+  toets2 &= 0x5f; // toUpper() ??
+  if ((toets2 >= 'A') && (toets2 <= 'T'))
+    toets = ((int(toets2) - int('A')) + 1); // 1 t/m 20 ?
+  else
+    toets = 0;
+
+  if ((toets>0)) { // Als binnen deze if een key interrupt optreedt, hebben we een probleem! Moet eigenlijk ondeelbaar plaatsvinden!
+//    if (toets == (z+1))
+      keysPressed[toets-1] = 0; //toets; // store 1 t/m 20 in keysPressed array [0-19]
+  }
+//  if ((!KnopjeIngedrukt)||(toets==0))
+//    keysPressed[z] = 0; // clear key
+//  if (toets > 0)
+//    buttonPressed = true;
+  if (toets>0)
+    KnopjeIngedrukt = false; // keyPressed;
 }
 
 void perFrameDemo1() {
@@ -979,23 +1015,23 @@ class Joystick {
     if (HumanPlayer[2]) {
       joy1.xDir = 0;
 
-      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*2)+0]==LinksToetsen2[2])))) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*2)+0]==LinksToetsen2[2])))) {
         joy1.xDir = 1;
         Lampjes |= (1L<<(LinksToetsen[2]-TranslationConstance));
         
-        keysPressed[(5*2)+0] = 0;
+//        keysPressed[(5*2)+0] = 0;
       }
 
-      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*2)+2]==RechtsToetsen2[2])))) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*2)+2]==RechtsToetsen2[2])))) {
         joy1.xDir = -1;
         Lampjes |= (1L<<(RechtsToetsen[2]-TranslationConstance));
         
-        keysPressed[(5*2)+2] = 0;
+//        keysPressed[(5*2)+2] = 0;
       }
 
-      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[2]%TotalNumKeys)).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*2)+3]==PlusToetsen2[2])))) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[2]%TotalNumKeys)).pressed()))||((stick==null)&&(keysPressed[(5*2)+3]==PlusToetsen2[2])))) {
         Lampjes |= (1L<<(PlusToetsen[2]-TranslationConstance));
-        keysPressed[(5*2)+3] = 0;
+//        keysPressed[(5*2)+3] = 0;
 
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
@@ -1014,9 +1050,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*2)+4]==MinToetsen2[2])))) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*2)+4]==MinToetsen2[2])))) {
         Lampjes |= (1L<<(MinToetsen[2]-TranslationConstance));
-        keysPressed[(5*2)+4] = 0;
+//        keysPressed[(5*2)+4] = 0;
         
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
@@ -1035,9 +1071,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*2)+1]==VuurKnoppen2[2])))) {
+      if ((abs(xOrient)==1)&&(joy1==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[2]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*2)+1]==VuurKnoppen2[2])))) {
         Lampjes |= (1L<<(VuurKnoppen[2]-TranslationConstance));
-        keysPressed[(5*2)+1] = 0;
+//        keysPressed[(5*2)+1] = 0;
         Charged = true;
       }
 //      else if ((abs(xOrient)==1)&&(joy1==this)) {
@@ -1053,21 +1089,21 @@ class Joystick {
     if (HumanPlayer[3]) {
       joy2.yDir = 0;
 
-      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*3)+0]==LinksToetsen2[3])))) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*3)+0]==LinksToetsen2[3])))) {
         joy2.yDir = -1;
         Lampjes |= (1L<<(LinksToetsen[3]-TranslationConstance));
-        keysPressed[(5*3)+0] = 0;
+//        keysPressed[(5*3)+0] = 0;
       }
 
-      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*3)+2]==RechtsToetsen2[3])))) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*3)+2]==RechtsToetsen2[3])))) {
         joy2.yDir = 1;
         Lampjes |= (1L<<(RechtsToetsen[3]-TranslationConstance));
-        keysPressed[(5*3)+2] = 0;
+//        keysPressed[(5*3)+2] = 0;
       }
 
-      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[3]%TotalNumKeys)).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*3)+3]==PlusToetsen2[3])))) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[3]%TotalNumKeys)).pressed()))||((stick==null)&&(keysPressed[(5*3)+3]==PlusToetsen2[3])))) {
         Lampjes |= (1L<<(PlusToetsen[3]-TranslationConstance));
-        keysPressed[(5*3)+3] = 0;
+//        keysPressed[(5*3)+3] = 0;
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -1085,9 +1121,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*3)+4]==MinToetsen2[3])))) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*3)+4]==MinToetsen2[3])))) {
         Lampjes |= (1L<<(MinToetsen[3]-TranslationConstance));
-        keysPressed[(5*3)+4] = 0;
+//        keysPressed[(5*3)+4] = 0;
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
@@ -1105,9 +1141,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*3)+1]==VuurKnoppen2[3])))) {
+      if ((abs(yOrient)==1)&&(joy2==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[3]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*3)+1]==VuurKnoppen2[3])))) {
         Lampjes |= (1L<<(VuurKnoppen[3]-TranslationConstance));
-        keysPressed[(5*3)+1] = 0;
+//        keysPressed[(5*3)+1] = 0;
         Charged = true;
       }
 //      else if ((abs(yOrient)==1)&&(joy2==this)) {
@@ -1122,21 +1158,21 @@ class Joystick {
     if (HumanPlayer[0]) {
       joy3.xDir = 0;
 
-      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*0)+0]==LinksToetsen2[0])))) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*0)+0]==LinksToetsen2[0])))) {
         joy3.xDir = -1;
         Lampjes |= (1L<<(LinksToetsen[0]-TranslationConstance));
-        keysPressed[(5*0)+0] = 0;
+//        keysPressed[(5*0)+0] = 0;
       }
 
-      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*0)+2]==RechtsToetsen2[0])))) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*0)+2]==RechtsToetsen2[0])))) {
         joy3.xDir = 1;
         Lampjes |= (1L<<(RechtsToetsen[0]-TranslationConstance));
-        keysPressed[(5*0)+2] = 0;
+//        keysPressed[(5*0)+2] = 0;
       }
 
-      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[0]%TotalNumKeys)).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*0)+3]==PlusToetsen2[0])))) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[0]%TotalNumKeys)).pressed()))||((stick==null)&&(keysPressed[(5*0)+3]==PlusToetsen2[0])))) {
         Lampjes |= (1L<<(PlusToetsen[0]-TranslationConstance));
-        keysPressed[(5*0)+3] = 0;
+//        keysPressed[(5*0)+3] = 0;
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -1154,9 +1190,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*0)+4]==MinToetsen2[0])))) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*0)+4]==MinToetsen2[0])))) {
         Lampjes |= (1L<<(MinToetsen[0]-TranslationConstance));
-        keysPressed[(5*0)+4] = 0;
+//        keysPressed[(5*0)+4] = 0;
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
@@ -1174,9 +1210,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*0)+1]==VuurKnoppen2[0])))) {
+      if ((abs(xOrient)==1)&&(joy3==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[0]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*0)+1]==VuurKnoppen2[0])))) {
         Lampjes |= (1L<<(VuurKnoppen[0]-TranslationConstance));
-        keysPressed[(5*0)+1] = 0;
+//        keysPressed[(5*0)+1] = 0;
         Charged = true;
       }
 //      else if ((abs(xOrient)==1)&&(joy3==this)) {
@@ -1191,21 +1227,21 @@ class Joystick {
     if (HumanPlayer[1]) {
       joy4.yDir = 0;
 
-      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*1)+0]==LinksToetsen2[1])))) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(LinksToetsen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*1)+0]==LinksToetsen2[1])))) {
         joy4.yDir = 1;
         Lampjes |= (1L<<(LinksToetsen[1]-TranslationConstance));
-        keysPressed[(5*1)+0] = 0;
+//        keysPressed[(5*1)+0] = 0;
       }
 
-      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*1)+2]==RechtsToetsen2[1])))) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(RechtsToetsen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*1)+2]==RechtsToetsen2[1])))) {
         joy4.yDir = -1;
         Lampjes |= (1L<<(RechtsToetsen[1]-TranslationConstance));
-        keysPressed[(5*1)+2] = 0;
+//        keysPressed[(5*1)+2] = 0;
       }
 
-      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[1]%TotalNumKeys)).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*1)+3]==PlusToetsen2[1])))) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton((PlusToetsen[1]%TotalNumKeys)).pressed()))||((stick==null)&&(keysPressed[(5*1)+3]==PlusToetsen2[1])))) {
         Lampjes |= (1L<<(PlusToetsen[1]-TranslationConstance));
-        keysPressed[(5*1)+3] = 0;
+//        keysPressed[(5*1)+3] = 0;
         if ((!DoubleSize)&&(!HalfSize)) {
           if (Score >= 30000) {
             Score -= 30000;
@@ -1223,9 +1259,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*1)+4]==MinToetsen2[1])))) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(MinToetsen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*1)+4]==MinToetsen2[1])))) {
         Lampjes |= (1L<<(MinToetsen[1]-TranslationConstance));
-        keysPressed[(5*1)+4] = 0;
+//        keysPressed[(5*1)+4] = 0;
         if ((!HalfSize)&&(!DoubleSize)) {
           if (Score >= 30000) {
             Score += 10000;
@@ -1243,9 +1279,9 @@ class Joystick {
         h = (50*abs(yOrient))+10; h = int((float(height)/(2*float(joySpeedY)))*abs(yOrient))+10;
       }
 
-      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keyPressed)&&(keysPressed[(5*1)+1]==VuurKnoppen2[1])))) {
+      if ((abs(yOrient)==1)&&(joy4==this)&&(((stick!=null)&&(stick.getButton(VuurKnoppen[1]%TotalNumKeys).pressed()))||((stick==null)&&(keysPressed[(5*1)+1]==VuurKnoppen2[1])))) {
         Lampjes |= (1L<<(VuurKnoppen[1]-TranslationConstance));
-        keysPressed[(5*1)+1] = 0;
+//        keysPressed[(5*1)+1] = 0;
         Charged = true;
       }
 //      else if ((abs(yOrient)==1)&&(joy4==this)) {
@@ -1360,10 +1396,10 @@ class Joystick {
 
   void Display() {
     rectMode(CENTER);
-    stroke(Color,(Opacity==0)?(0):(160));
+    stroke(Color,((Opacity==0)?(0):(160)));
     strokeWeight(2);
     strokeJoin(BEVEL); // BEVEL, MITER, ROUND
-    fill(Color,(Opacity==0)?(0):(255));
+    fill(Color,((Opacity==0)?(0):(255)));
     if (Opacity==255) {
       if (PFlag)
         fill(0,255,0);
@@ -1840,7 +1876,7 @@ class Highscore {
            keysPressed[i] = 0;
          }
          buttonPressed = false;
-         CollectedFireButtons[playerX] = HumanPlayer[playerX];  // true;
+         CollectedFireButtons[playerX] = true; // HumanPlayer[playerX];  // true;
          RepKey[1] = true;
          keysPressed[(5*playerX)+1] = 0;
        }
@@ -1883,6 +1919,9 @@ class Highscore {
 
    if ((NumCollectedFireButtons == Hulpje)) {
      resetGame = true;
+//     println(NumCollectedFireButtons);
+//     println(Hulpje);
+//     println(frameCounter);
      frameCounter = 32000; // Skip to End + saveHighscores()
    }
 
