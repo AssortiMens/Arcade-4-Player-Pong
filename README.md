@@ -53,7 +53,7 @@ After you have reached 30000 points you should try catching as many white balls 
 # Highscore
 
 If you have a highscore, the game will recognise this, you may put your name (10 chars max) in the table.
-Use keys 'a' and 'c' to move the virtual cursor left or right. Use keys 'd' or 'e' to increment or decrement the character under the virtual cursor. Once your entire name is complete, you can press fire ('e') to acknowledge the save of the highscorelist and reset the game.
+Use keys 'a' and 'c' to move the virtual cursor left or right. Use keys 'd' or 'e' to increment or decrement the character under the virtual cursor. Once your entire name is complete, you can press fire ('b') to acknowledge the save of the highscorelist and reset the game.
 
 Have fun!
 
