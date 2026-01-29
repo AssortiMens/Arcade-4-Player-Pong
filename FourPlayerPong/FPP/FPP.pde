@@ -339,7 +339,7 @@ void initGame() {
   buttonPressed = false;
   for (int j=(0+TranslationConstance);j<(NumKeys+TranslationConstance);j++)
    {
-    keysPressed[j] = 0;
+//    keysPressed[j] = 0;
     XRepKeys[j] = false;
    }
 
@@ -463,22 +463,41 @@ void draw() {
   }
   
   if (frameCounter<10000) {
+//    buttonPressed=false;
     ButtonPressed();
-  }
-  
-  if ((buttonPressed)&&(frameCounter<10000)) {
-    initGame();
-    frameCounter=10000;
-    buttonPressed=false;
     for (int i=0;i<4;i++) {
       HumanPlayer[i]=false;
     }
   }
+  
+  if ((buttonPressed)&&(frameCounter<10000)) {
+    initGame(); // contains a flush all keys! I disabled that!
+    frameCounter=10000;
+  }
 
   if (frameCounter>=10000) {
     if (frameCounter<11000) {
-      ButtonPressed();
 
+//      ButtonPressed();
+
+      for (int i = TranslationConstance; i < (NumKeys + TranslationConstance); i++) {
+        Key = keysPressed[((i) % TotalNumKeys)];
+        keysPressed[((i) % TotalNumKeys)] = 0;
+        if (Key > 0) {
+          Player = ((((Key - 1) - TranslationConstance) % TotalNumKeys) / NumKeysPerPlayer);
+          Key = ((((Key - 1) - TranslationConstance) % TotalNumKeys) % NumKeysPerPlayer);
+
+          Lampjes |= (1L << (((Player & 3) * NumKeysPerPlayer) + Key));
+
+          HumanPlayer[(Player & 3)] = true;
+          NumHumanPlayers = 0;
+
+          for(int j=0;j<4;j++) {
+            NumHumanPlayers = ((HumanPlayer[j])?(NumHumanPlayers+1):(NumHumanPlayers));
+          }
+        }
+      }
+      
       background(0);
       Joystick Joys[] = {joy3,joy4,joy1,joy2};
 
@@ -505,24 +524,8 @@ void draw() {
         }
       }
       popMatrix();
-
-      for (int i = TranslationConstance; i < (NumKeys + TranslationConstance); i++) {
-        Key = keysPressed[((i) % TotalNumKeys)];
-        keysPressed[((i) % TotalNumKeys)] = 0;
-        if (Key > 0) {
-          Player = ((((Key - 1) - TranslationConstance) % TotalNumKeys) / NumKeysPerPlayer);
-          Key = ((((Key - 1) - TranslationConstance) % TotalNumKeys) % NumKeysPerPlayer);
-
-          Lampjes |= (1L << (((Player & 3) * NumKeysPerPlayer) + Key));
-
-          HumanPlayer[(Player & 3)] = true;
-          NumHumanPlayers = 0;
-
-          for(int j=0;j<4;j++) {
-            NumHumanPlayers = ((HumanPlayer[j])?(NumHumanPlayers+1):(NumHumanPlayers));
-          }
-        }
-      }
+      
+      ButtonPressed();
     }
 
     if (((frameCounter>=11000)&&(frameCounter<=21000))&&(!(GameOver))) {
