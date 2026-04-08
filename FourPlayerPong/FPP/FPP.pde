@@ -101,6 +101,39 @@ int NumRows = 8;
 //AudioOutput out;
 //AudioInput in;
 
+void sorteer()
+{
+  Ball hulpje2;
+  
+  for(int i = 0; i < (NumBalls - 1); i++)
+  {
+    for(int j = i + 1; j < NumBalls; j++) {
+      if ((ball[i] != null) && (ball[j] != null)) {
+        if (ball[i].y > ball[j].y)
+        {
+          hulpje2 = ball[i];
+          ball[i] = ball[j];
+          ball[j] = hulpje2;
+        }
+      }
+    }
+  }
+  
+  for(int i = 0; i < (NumBalls - 1); i++)
+  {
+    for(int j = i + 1; j < NumBalls; j++) {
+      if ((ball[i] != null) && (ball[j] != null)) {
+        if ((ball[i].y == ball[j].y) && (ball[i].x > ball[j].x))
+        {
+          hulpje2 = ball[i];
+          ball[i] = ball[j];
+          ball[j] = hulpje2;
+        }
+      }
+    }
+  }
+}
+
 void setup() {
   fullScreen();
 //  size(2560,1440);
@@ -391,6 +424,8 @@ void initGame() {
   {
     ball[i] = new Ball(width/2,height/2,int(random(ballSpeed))+1,int(random(ballSpeed))+1,Dirs[int(random(2))],Dirs[int(random(2))],color(255,255,255));
   }
+
+  sorteer(); // sorteer de ballen, eerst op y daarna op x...
 }
 
 int CalcLicht() {
@@ -925,11 +960,14 @@ void perFrameGame() {
     joy3.Update();
   if (joy4.Opacity==255)
     joy4.Update();
-  
+
   for (int j=0;j<NumBalls;j++)
   {
     ball[j].Update();
   }
+
+  sorteer(); // Sorteer de ballen, eerst op y dan op x...
+
 }
 
 int NumOpacity = 0; // There can only be 1, it's global and static.
@@ -966,11 +1004,13 @@ class Joystick {
   int dtime = 500;  // 500 frames = delta time
   int ffc_time = 0; // future frameCounter time
   int Opacity = 255;
+/*
   boolean collided[]={false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false};
+*/
   boolean HalfSize=false;
   boolean DoubleSize=false;
   boolean Charged = false;
@@ -994,7 +1034,8 @@ class Joystick {
     GameOver = false; // warning, this one is global and static and there's only 1
     for (int i=0;i<NumBalls;i++)
       {
-        collided[i] = false;
+        if (ball[i] != null)
+          ball[i].collided = false;
       }
     Color = tColor;
     Highscore = null;
@@ -1084,9 +1125,23 @@ class Joystick {
 //      }
     }
     else {
-      // AI comes here
-      joy1.x = ball[0].x;
-      joy1.xDir = 0;
+      // AI comes here, joy1=HumanPlayer[2]=Player3=magenta
+      for(int i=0;i<NumBalls;i++) {
+        if (ball[i].Color == color(255,255,255)) {
+          if (ball[i].yDir == -1) {
+            if (ball[i].x < joy1.x)
+              joy1.xDir = -1;
+            else
+            if (ball[i].x > joy1.x)
+              joy1.xDir = 1;
+            else
+              joy1.xDir = 0;
+          }
+//        joy1.x = ball[i].x;
+//        joy1.xDir = 0;
+//        joy1.Color=color(255,255,255);
+        }
+      }
     }
 
     if (HumanPlayer[3]) {
@@ -1153,9 +1208,27 @@ class Joystick {
 //        Charged = false;
 //      }
     }
-    else {
-      joy2.y = ball[0].y;
-      joy2.yDir = 0;
+    else { // Here comes AI, joy2=HumanPlayer[3]=Player4=rood
+      for(int i=0;i<NumBalls;i++) {
+        if (ball[i].Color == color(255,255,255)) {
+          if (ball[i].xDir == -1) {
+            if (ball[i].y < joy2.y)
+              joy2.yDir = -1;
+            else
+            if (ball[i].y > joy2.y)
+              joy2.yDir = 1;
+            else
+              joy2.yDir = 0;
+          }
+
+//        joy2.y = ball[i].y;
+//        joy2.yDir = 0;
+//        joy2.Color = color(255,255,255);
+        }
+      }
+
+//      joy2.y = ball[0].y;
+//      joy2.yDir = 0;
     }
     
     if (HumanPlayer[0]) {
@@ -1222,9 +1295,26 @@ class Joystick {
 //        Charged = false;
 //      }
     }
-    else {
-      joy3.x = ball[0].x;
-      joy3.xDir = 0;
+    else { // Here comes AI, joy3=HumanPlayer[0]=Player1=blauw
+      for(int i=0;i<NumBalls;i++) {
+        if (ball[i].Color == color(255,255,255)) {
+          if (ball[i].yDir == 1) {
+            if (ball[i].x < joy3.x)
+              joy3.xDir = -1;
+            else
+            if (ball[i].x > joy3.x)
+              joy3.xDir = 1;
+            else
+              joy3.xDir = 0;
+          }
+//        joy3.x = ball[i].x;
+//        joy3.xDir = 0;
+//        joy3.Color = color(255,255,255);
+        }
+      }
+
+//      joy3.x = ball[0].x;
+//      joy3.xDir = 0;
     }
 
     if (HumanPlayer[1]) {
@@ -1291,9 +1381,26 @@ class Joystick {
 //        Charged = false;
 //      }
     }
-    else {
-      joy4.y = ball[0].y;
-      joy4.yDir = 0;
+    else { // Here comes AI, joy4=HumanPlayer[1]=Player2=Groen
+      for(int i=0;i<NumBalls;i++) {
+        if (ball[i].Color == color(255,255,255)) { // Color compare wel of niet mogelijk ??????
+          if (ball[i].xDir == 1) {
+            if (ball[i].y < joy4.y)
+              joy4.yDir = -1;
+            else
+            if (ball[i].y > joy4.y)
+              joy4.yDir = 1;
+            else
+              joy4.yDir = 0;
+          }
+//          joy4.y += (joySpeedY*yDir); //ball[i].y;
+//          joy4.yDir = 0;
+//          joy4.Color = color(255,255,255);
+        }
+      }
+
+//      joy4.y = ball[0].y;
+//      joy4.yDir = 0;
     }
 
 // Joystick moves here!
@@ -1323,7 +1430,7 @@ class Joystick {
       int temp = ball[i].r;
       if (abs(x - ball[i].x) * 2 < (w + temp) && 
         abs(y - ball[i].y) * 2 < (h + temp)) {
-        if (!(collided[i])) {
+        if (!(ball[i].collided)) {
           Score++;
 //          ball[i].Color = Color;
           if (abs(yOrient) == 1) {
@@ -1355,7 +1462,7 @@ class Joystick {
             ball[i].xSpeed = (int((float((dx)) / float(w/2)) * float(ballSpeed)) % ballSpeed) + 1; ball[i].xSpeed = int(float(ball[i].xSpeed)*float(width)/float(height)); //can be 0! int(random(ballSpeed))+1;
           }
           ping.trigger();
-          collided[i] = true;
+          ball[i].collided = true;
           if ((ball[i].Loaded)&&(!Charged)) {
             ball[i].Loaded = false;
 //            Opacity = 0; // explosie, game over voor deze speler!
@@ -1392,7 +1499,7 @@ class Joystick {
         }
       }
       else {
-        collided[i] = false;
+        ball[i].collided = false;
       }
     }
   }
@@ -1485,7 +1592,8 @@ class Ball {
   int CorIndex = 0;
   color Color = color(255,255,255);
   boolean Loaded = false;
-  
+  boolean collided = false;
+
   Ball(int tx, int ty, int txSpeed, int tySpeed, int txDir, int tyDir, color tColor) {
     x = tx;
     y = ty;
