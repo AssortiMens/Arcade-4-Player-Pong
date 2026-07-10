@@ -134,10 +134,26 @@ void sorteer()
   }
 }
 
+PFont myFont;
+
 void setup() {
   fullScreen();
+//  fullScreen(P2D);
+
+//  setSize(width,height);
+
 //  size(2560,1440);
+//  windowResize(2560,1440); // Please adjust to your screen resolution
+  
+//  String[] fontList = PFont.list();
+//  printArray(fontList);
+  
+//  myFont = createFont("SansSerif.bold", 64, true);
+//  textFont(myFont);
+
 //  size(800,600);
+
+  textSize(TextSize);
   pixelDensity(1);
   smooth();
   noCursor();
@@ -727,7 +743,7 @@ void ButtonPressed() {
   } // end of for loop
 } // end of ButtonPressed()
 
-boolean KnopjeIngedrukt = false; // keyPressed;
+//boolean KnopjeIngedrukt = false; // keyPressed;
 
 void keyPressed() {
   byte toets2 = 0;
@@ -748,8 +764,9 @@ void keyPressed() {
 //    keysPressed[z] = 0; // clear key
 //  if (toets > 0)
 //    buttonPressed = true;
-  if (toets>0)
-    KnopjeIngedrukt = true; // keyPressed;
+
+//  if (toets>0)
+//    KnopjeIngedrukt = true; // keyPressed;
 }
 
 void keyReleased()
@@ -772,8 +789,9 @@ void keyReleased()
 //    keysPressed[z] = 0; // clear key
 //  if (toets > 0)
 //    buttonPressed = true;
-  if (toets>0)
-    KnopjeIngedrukt = false; // keyPressed;
+
+//  if (toets>0)
+//    KnopjeIngedrukt = false; // keyPressed;
 }
 
 void perFrameDemo1() {
