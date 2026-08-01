@@ -1022,13 +1022,13 @@ class Joystick {
   int dtime = 500;  // 500 frames = delta time
   int ffc_time = 0; // future frameCounter time
   int Opacity = 255;
-/*
+
   boolean collided[]={false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false,
                       false,false,false,false,false,false,false,false,false,false};
-*/
+
   boolean HalfSize=false;
   boolean DoubleSize=false;
   boolean Charged = false;
@@ -1052,8 +1052,9 @@ class Joystick {
     GameOver = false; // warning, this one is global and static and there's only 1
     for (int i=0;i<NumBalls;i++)
       {
-        if (ball[i] != null)
-          ball[i].collided = false;
+        collided[i] = false;
+//        if (ball[i] != null)
+//          ball[i].collided = false;
       }
     Color = tColor;
     Highscore = null;
@@ -1448,7 +1449,7 @@ class Joystick {
       int temp = ball[i].r;
       if (abs(x - ball[i].x) * 2 < (w + temp) && 
         abs(y - ball[i].y) * 2 < (h + temp)) {
-        if (!(ball[i].collided)) {
+        if (!(collided[i])) { // ball[i].collided)) {
           Score++;
 //          ball[i].Color = Color;
           if (abs(yOrient) == 1) {
@@ -1480,7 +1481,7 @@ class Joystick {
             ball[i].xSpeed = (int((float((dx)) / float(w/2)) * float(ballSpeed)) % ballSpeed) + 1; ball[i].xSpeed = int(float(ball[i].xSpeed)*float(width)/float(height)); //can be 0! int(random(ballSpeed))+1;
           }
           ping.trigger();
-          ball[i].collided = true;
+          collided[i] = true; // ball[i].collided = true;
           if ((ball[i].Loaded)&&(!Charged)) {
             ball[i].Loaded = false;
 //            Opacity = 0; // explosie, game over voor deze speler!
@@ -1517,7 +1518,7 @@ class Joystick {
         }
       }
       else {
-        ball[i].collided = false;
+        collided[i] = false; // ball[i].collided = false;
       }
     }
   }
@@ -1610,7 +1611,7 @@ class Ball {
   int CorIndex = 0;
   color Color = color(255,255,255);
   boolean Loaded = false;
-  boolean collided = false;
+//  boolean collided = false;
 
   Ball(int tx, int ty, int txSpeed, int tySpeed, int txDir, int tyDir, color tColor) {
     x = tx;
