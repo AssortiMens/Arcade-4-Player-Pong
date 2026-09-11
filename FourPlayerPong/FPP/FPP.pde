@@ -104,6 +104,7 @@ int NumRows = 8;
 void sorteer()
 {
   Ball hulpje2;
+  boolean hulpje3;
   
   for(int i = 0; i < (NumBalls - 1); i++)
   {
@@ -114,6 +115,31 @@ void sorteer()
           hulpje2 = ball[i];
           ball[i] = ball[j];
           ball[j] = hulpje2;
+
+          if (joy1 != null)
+            {
+              hulpje3 = joy1.collided[i];
+              joy1.collided[i] = joy1.collided[j];
+              joy1.collided[j] = hulpje3;
+            }
+          if (joy2 != null)
+            {
+              hulpje3 = joy2.collided[i];
+              joy2.collided[i] = joy2.collided[j];
+              joy2.collided[j] = hulpje3;
+            }
+          if (joy3 != null)
+            {
+              hulpje3 = joy3.collided[i];
+              joy3.collided[i] = joy3.collided[j];
+              joy3.collided[j] = hulpje3;
+            }
+          if (joy4 != null)
+            {
+              hulpje3 = joy4.collided[i];
+              joy4.collided[i] = joy4.collided[j];
+              joy4.collided[j] = hulpje3;
+            }
         }
       }
     }
@@ -128,6 +154,32 @@ void sorteer()
           hulpje2 = ball[i];
           ball[i] = ball[j];
           ball[j] = hulpje2;
+
+          if (joy1 != null)
+            {
+              hulpje3 = joy1.collided[i];
+              joy1.collided[i] = joy1.collided[j];
+              joy1.collided[j] = hulpje3;
+            }
+          if (joy2 != null)
+            {
+              hulpje3 = joy2.collided[i];
+              joy2.collided[i] = joy2.collided[j];
+              joy2.collided[j] = hulpje3;
+            }
+          if (joy3 != null)
+            {
+              hulpje3 = joy3.collided[i];
+              joy3.collided[i] = joy3.collided[j];
+              joy3.collided[j] = hulpje3;
+            }
+          if (joy4 != null)
+            {
+              hulpje3 = joy4.collided[i];
+              joy4.collided[i] = joy4.collided[j];
+              joy4.collided[j] = hulpje3;
+            }
+
         }
       }
     }
@@ -960,10 +1012,10 @@ void perFrameDemo4() {
 }
 
 void perFrameGame() {
-  joy1.Display();
-  joy2.Display();
-  joy3.Display();
-  joy4.Display();
+  joy1.Display(); // Player 3, Magenta
+  joy2.Display(); // Player 4, Red
+  joy3.Display(); // Player 1, Blue
+  joy4.Display(); // Player 2, Green
   
   for (int i=0;i<NumBalls;i++)
   {
