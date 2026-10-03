@@ -239,17 +239,17 @@ void setup() {
       titlesong = minim.loadFile("data/12-dreams.mp3");
       if ((ping == null)||(pong == null)||(explosion == null)||(titlesong == null)) {
         println("Music / SFX failed to load!");
-        System.exit(0);
+//        System.exit(0);
       }
     }
     else {
       println("minim == null !!");
-      System.exit(0);
+//      System.exit(0);
     }
   }
   catch (Exception e) {
     println("No sounds found!");
-    System.exit(0);
+//    System.exit(0);
   }
 
  if (stick!=null) {
@@ -274,7 +274,8 @@ void setup() {
 
   TextOrientation=0;
   
-  titlesong.loop();
+  if (titlesong != null)
+    titlesong.loop();
   
   demoMode();
   initGame();
@@ -1532,7 +1533,8 @@ class Joystick {
             }}
             ball[i].xSpeed = (int((float((dx)) / float(w/2)) * float(ballSpeed)) % ballSpeed) + 1; ball[i].xSpeed = int(float(ball[i].xSpeed)*float(width)/float(height)); //can be 0! int(random(ballSpeed))+1;
           }
-          ping.trigger();
+          if (ping != null)
+            ping.trigger();
           collided[i] = true; // ball[i].collided = true;
           if ((ball[i].Loaded)&&(!Charged)) {
             ball[i].Loaded = false;
@@ -1549,7 +1551,8 @@ class Joystick {
             if ((Opacity==255)&&(ball[i].Color == joy4.Color))
               joy4.Score += 100000;
             Opacity = 0; // explosie, game over voor deze speler!
-            explosion.trigger();
+            if (explosion != null)
+              explosion.trigger();
           }
 //          else {
 //            if (Opacity != 0) {
@@ -1617,7 +1620,6 @@ class Joystick {
       if (FirstTime == true) {
         w = 5; h = 5; // ((frameCounter)%100)+1;
         FirstTime = false;
-//        explosion.trigger(); // explosion sound has moved to update-function!
       }
       strokeWeight(5);
       if (w >= 255) {
@@ -1684,7 +1686,8 @@ class Ball {
     
     if ((x < r) || (x > (width-r))) {
       xDir = -xDir;
-      pong.trigger();
+      if (pong != null)
+        pong.trigger();
       if (x < r)
         x = r;
       if (x > (width-r))
@@ -1719,7 +1722,8 @@ class Ball {
 
     if ((y < r) || (y > (height-r))) {
       yDir = -yDir;
-      pong.trigger();
+      if (pong != null)
+        pong.trigger();
       if (y < r)
         y = r;
       if (y > (height-r))
